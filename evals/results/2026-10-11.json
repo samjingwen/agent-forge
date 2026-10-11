@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-11",
+  "fixture": "subtraction-v1",
+  "claim": "Small live smoke evaluation, not a comparative accuracy benchmark",
+  "observations": [
+    { "harness": "opencode", "cli_version": "1.18.35", "requested_model": null, "served_model_observed": false, "case": "introduced-defect", "status": "complete", "exit_code": 1, "elapsed_ms": 16392, "reviewed_paths": ["math.js"], "act_on_errors": 1, "known_defect_reported": true },
+    { "harness": "opencode", "cli_version": "1.18.35", "requested_model": null, "served_model_observed": false, "case": "clean-control", "status": "complete", "exit_code": 0, "elapsed_ms": 12455, "reviewed_paths": ["math.js"], "findings": 0 },
+    { "harness": "claude-code", "cli_version": "2.0.76", "requested_model": "sonnet", "case": "introduced-defect", "status": "incomplete", "elapsed_ms": 4064, "process_exit_code": 1, "diagnosis": "harness-reported-credential-rejection" },
+    { "harness": "claude-code", "cli_version": "2.0.76", "requested_model": "sonnet", "case": "clean-control", "status": "incomplete", "elapsed_ms": 3825, "process_exit_code": 1, "diagnosis": "harness-reported-credential-rejection" }
+  ]
+}

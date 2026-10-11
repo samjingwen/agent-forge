@@ -1,0 +1,29 @@
+{
+  "$comment": "Review schema adapted from no-mistakes 4822244e763fd4c3d7f48be6433f92df10bb5b33/internal/pipeline/steps/common.go; MIT, Copyright 2026 Kun Chen",
+  "type": "object",
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "severity": { "type": "string", "enum": ["error", "warning", "info"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer" },
+          "description": { "type": "string" },
+          "action": { "type": "string", "enum": ["no-op", "auto-fix", "ask-user"] },
+          "review_scope": { "type": "string", "enum": ["source", "pipeline-owned-delivery", "external-delivery"] }
+        },
+        "required": ["severity", "description", "action", "review_scope"]
+      }
+    },
+    "reviewed_paths": { "type": "array", "items": { "type": "string" } },
+    "tested": { "type": "array", "items": { "type": "string" } },
+    "testing_summary": { "type": "string" },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
+    "risk_rationale": { "type": "string" },
+    "risk_scope": { "type": "string", "enum": ["source-or-external", "pipeline-owned-delivery"] }
+  },
+  "required": ["findings", "risk_level", "risk_rationale", "risk_scope"]
+}

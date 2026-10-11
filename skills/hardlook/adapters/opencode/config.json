@@ -1,0 +1,20 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "snapshot": false,
+  "share": "disabled",
+  "formatter": false,
+  "lsp": false,
+  "agent": {
+    "hardlook-peer": {
+      "description": "Independent evidence-first code reviewer; no changes or delegation",
+      "mode": "primary",
+      "permission": {
+        "*": "deny",
+        "read": { "*": "allow", "*.env*": "deny", "*auth.json": "deny", "*auth.yaml": "deny", "*auth.toml": "deny", "*credentials*": "deny", "*.netrc": "deny", "*.npmrc": "deny", "*/.aws/*": "deny", "*tokens.json": "deny", "*oauth_creds.json": "deny", "*.pem": "deny", "*.key": "deny" },
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow"
+      }
+    }
+  }
+}

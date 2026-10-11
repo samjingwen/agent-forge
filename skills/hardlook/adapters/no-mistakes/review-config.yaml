@@ -1,0 +1,12 @@
+# Merge this block into the consumer's trusted default-branch config.
+review:
+  path_instructions:
+    - path: "*"
+      instructions: |
+        Apply the installed Hardlook routine review protocol and lead filtering
+        to these changed paths. Load its bundled no-mistakes adapter instructions.
+        Preserve this pipeline's intent, scope, round history, coverage rules,
+        role boundaries, and required JSON output schema. Keep evidence,
+        consequence, and suggested remedy in finding descriptions. Report
+        missing skill assets as incomplete integration, not successful Hardlook
+        execution. Return only this step's assigned result to the active run.
