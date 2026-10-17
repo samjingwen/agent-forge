@@ -17,4 +17,5 @@ Documentation checked on 17 October 2026. Recheck runtime-specific behavior when
 | Claude skill discovery and extensions | [Skills](https://code.claude.com/docs/en/skills) |
 | JavaScript/TypeScript workspace layout | [pnpm workspaces](https://pnpm.io/workspaces) |
 
-The folder layout, custom catalogs, and packaging utility in this starter are project design choices. These sources document the integrations they target, not an endorsement or validation of this repository.
+The folder layout, custom catalogs, and packaging utility in this repository are project design choices.
+These sources document the integrations they target, not an endorsement or validation of this repository.

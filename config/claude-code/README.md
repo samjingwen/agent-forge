@@ -16,7 +16,7 @@ For a Git-hosted marketplace, commit both distribution/claude-code/ and
 Local development and a clean marketplace installation exercise different
 loading paths. Check both before declaring a release ready.
 
-This starter does not change settings, register a marketplace, or install tools.
+This repository does not change settings, register a marketplace, or install tools.
 
 Official references:
 

@@ -3,6 +3,7 @@
 This repository contains reusable agent tooling with separately installable components.
 
 - Read README.md and the relevant component's documentation before changing it.
+- For Hardlook work, read docs/hardlook/development.md and preserve its self-contained skill boundary.
 - Author portable skill content in skills/<name>/SKILL.md and keep its supporting files beside it.
 - Put OpenCode integrations in plugins/opencode and Claude integrations in plugins/claude-code.
 - Keep custom MCP implementations in mcp-servers and shared executable code in packages.

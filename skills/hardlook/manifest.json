@@ -1,0 +1,18 @@
+{
+  "name": "hardlook",
+  "version": "0.1.1",
+  "entrypoint": "SKILL.md",
+  "distribution": "self-contained-agent-skill",
+  "modes": ["routine", "deep", "structure"],
+  "harnesses": ["opencode", "cursor", "pi", "claude-code", "codex"],
+  "workflowAdapters": ["no-mistakes"],
+  "helperPrerequisites": { "node": ">=22", "git": true, "platforms": ["linux", "darwin"] },
+  "runtimeNpmDependencies": [],
+  "upstreamDownloadsDuringReview": false,
+  "provenance": [
+    { "project": "Ponytail", "revision": "9b58c1ffb790c075ca32e70a89cf1d80588f4abf", "source": "https://github.com/DietrichGebert/ponytail", "license": "MIT", "use": "Adapted evidence-first routine review" },
+    { "project": "pstack", "revision": "9d76bcab133aefcccb16121d7be874e6aa823729", "source": "https://github.com/cursor/plugins/tree/main/pstack", "license": "MIT", "use": "Adapted independent review and contextual lead judgment" },
+    { "project": "Cursor team kit", "revision": "9d76bcab133aefcccb16121d7be874e6aa823729", "source": "https://github.com/cursor/plugins/tree/main/cursor-team-kit", "license": "MIT", "use": "Adapted structural review lens" },
+    { "project": "no-mistakes", "revision": "4822244e763fd4c3d7f48be6433f92df10bb5b33", "source": "https://github.com/kunchenguid/no-mistakes", "license": "MIT", "use": "Versioned review output schema" }
+  ]
+}
