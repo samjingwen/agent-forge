@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "marketplace": {
+    "name": "agent-toolkit",
+    "owner": {
+      "name": "CHANGE_ME"
+    }
+  },
+  "bundles": []
+}

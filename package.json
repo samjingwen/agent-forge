@@ -1,0 +1,14 @@
+{
+  "name": "agent-toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "check": "node tooling/agent-toolkit.mjs check",
+    "build:claude": "node tooling/agent-toolkit.mjs build:claude",
+    "config:opencode": "node tooling/agent-toolkit.mjs config:opencode"
+  }
+}

@@ -1,0 +1,4 @@
+packages:
+  - "plugins/opencode/*"
+  - "mcp-servers/*"
+  - "packages/*"

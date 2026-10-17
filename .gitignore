@@ -1,0 +1,22 @@
+node_modules/
+/dist/
+/build/
+/plugins/**/dist/
+/plugins/**/build/
+/mcp-servers/**/dist/
+/mcp-servers/**/build/
+/packages/**/dist/
+/packages/**/build/
+coverage/
+.gradle/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
+.env.*
+!.env.example
+*.local.json
+*.local.jsonc
+.cache/
+# distribution/ is deliberately tracked: marketplace installs need those files.
