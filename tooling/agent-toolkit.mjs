@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createHash, randomUUID } from 'node:crypto';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+// Keep the legacy ownership protocol stable across repository/package renames.
 const markerName = '.agent-toolkit-generated.json';
 const ignored = new Set(['.git', 'node_modules', '.DS_Store', '.venv', '__pycache__', '.gradle', 'coverage']);
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -267,6 +268,6 @@ try {
     if (command !== 'help' && command !== '--help') process.exitCode = 1;
   }
 } catch (error) {
-  console.error('agent-toolkit: ' + error.message);
+  console.error('agent-forge: ' + error.message);
   process.exitCode = 1;
 }

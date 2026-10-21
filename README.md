@@ -1,4 +1,4 @@
-# Agent Toolkit
+# Agent Forge
 
 One Git repository for reusable agent skills, OpenCode plugins, Claude Code plugins, MCP servers, and the code they share.
 
@@ -10,7 +10,7 @@ Keep the reusable instructions in one place, retain each runtime's native plugin
 It supports routine review, independent deep review, and structural audits.
 
 ```sh
-npx skills add samjingwen/agent-toolkit --skill hardlook
+npx skills add samjingwen/agent-forge --skill hardlook
 ```
 
 Choose your harness, start a new session, and ask for "Hardlook review this change", "Hardlook deep", or "Hardlook structure".
@@ -18,6 +18,7 @@ For OpenCode's slash-menu command, follow the [Hardlook setup instructions](docs
 Existing Hardlook installations continue to work; use this repository for future installs and updates.
 
 Hardlook was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook), with its Git history, tests, and license notices preserved.
+The repository and private package are named `agent-forge`; former `samjingwen/agent-toolkit` GitHub URLs redirect to the current repository.
 
 ## Repository layout
 
@@ -91,7 +92,7 @@ Read [Hardlook development](docs/hardlook/development.md), [architecture](docs/a
 {
   "schemaVersion": 1,
   "marketplace": {
-    "name": "agent-toolkit",
+    "name": "agent-forge",
     "owner": { "name": "Sam Jing Wen" }
   },
   "bundles": [

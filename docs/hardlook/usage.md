@@ -5,7 +5,7 @@
 Use the skills installer and select your harness:
 
 ```sh
-npx skills add samjingwen/agent-toolkit --skill hardlook
+npx skills add samjingwen/agent-forge --skill hardlook
 ```
 
 The canonical distributable is `skills/hardlook/`, including all subdirectories.

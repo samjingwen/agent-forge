@@ -36,6 +36,11 @@ The builder marks the distribution it owns and refuses to replace an existing un
 It also protects an unrelated root marketplace catalog.
 Generated files must be reviewed and committed with source changes before marketplace publication.
 
+Agent Forge retains `tooling/agent-toolkit.mjs` as its existing CLI entrypoint.
+The generated-output marker `.agent-toolkit-generated.json` and its `generator: "agent-toolkit"` value are stable legacy ownership contracts, not current product branding.
+Do not rename them when updating repository, package, marketplace, or install identities: existing owned distributions must remain recognizable, while unowned output must still be refused.
+Generate distribution and marketplace changes through the builder rather than editing their serialized output by hand.
+
 If the final bundle is removed from the catalog while publication files remain, the build fails and requires explicit cleanup; it will not silently retain a stale release as a successful build.
 During replacement it keeps the previous distribution until the new catalog is installed and restores it on a caught installation error.
 Run one build at a time.
