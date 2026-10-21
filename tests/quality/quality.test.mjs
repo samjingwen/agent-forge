@@ -37,7 +37,7 @@ function hook(command, cwd) {
 }
 
 async function temporary(t) {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'agent-toolkit-quality-'));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'agent-forge-quality-'));
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
   return directory;
 }

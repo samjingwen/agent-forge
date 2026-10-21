@@ -1,12 +1,12 @@
 {
-  "name": "agent-toolkit",
+  "name": "agent-forge",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/samjingwen/agent-toolkit.git"
+    "url": "git+https://github.com/samjingwen/agent-forge.git"
   },
   "engines": {
     "node": ">=22.13.0"

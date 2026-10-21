@@ -2,7 +2,9 @@
 
 Run from anywhere:
 
-    node /absolute/path/to/agent-toolkit/tooling/agent-toolkit.mjs config:opencode
+    node /absolute/path/to/agent-forge/tooling/agent-toolkit.mjs config:opencode
+
+The `agent-toolkit.mjs` filename is a retained CLI compatibility entrypoint, not the current repository name.
 
 The command prints a JSON config fragment with an absolute skills source and the
 immediate local plugin directories containing package.json, index.ts, or index.js.
