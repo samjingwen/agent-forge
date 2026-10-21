@@ -22,7 +22,10 @@ try {
     await git('config', 'user.email', 'evaluation@example.invalid');
     await git('config', 'user.name', 'Evaluation');
     await fs.writeFile(path.join(repo, 'math.js'), 'export function subtract(a, b) { return a - b; }\n');
-    await fs.writeFile(path.join(repo, 'AGENTS.md'), 'Review the subtraction contract. Do not demand scaffolding for this small module.\n');
+    await fs.writeFile(
+      path.join(repo, 'AGENTS.md'),
+      'Review the subtraction contract. Do not demand scaffolding for this small module.\n',
+    );
     await git('add', '.');
     await git('commit', '-m', 'base');
     await git('checkout', '-b', 'change');
@@ -30,14 +33,38 @@ try {
     await git('add', '.');
     await git('commit', '-m', 'change');
     const started = Date.now();
-    const result = await execute(process.execPath, [cli, 'review', '--repo', repo, '--base', 'main',
-      '--intent', 'Keep subtract(a, b) returning a minus b for ordinary numeric inputs.',
-      '--peer', values.peer, '--timeout-ms', values['timeout-ms'] ?? '180000'], { allowFailure: true, timeoutMs: 200_000 });
+    const result = await execute(
+      process.execPath,
+      [
+        cli,
+        'review',
+        '--repo',
+        repo,
+        '--base',
+        'main',
+        '--intent',
+        'Keep subtract(a, b) returning a minus b for ordinary numeric inputs.',
+        '--peer',
+        values.peer,
+        '--timeout-ms',
+        values['timeout-ms'] ?? '180000',
+      ],
+      { allowFailure: true, timeoutMs: 200_000 },
+    );
     const report = result.stdout ? JSON.parse(result.stdout) : null;
-    observations.push({ name, peer: values.peer, elapsed_ms: Date.now() - started, exit_code: result.code,
-      status: report?.status ?? 'incomplete', report: report?.report ?? null, limitations: report?.limitations ?? ['no-report'],
-      failures: report?.peers?.filter((peer) => peer.status === 'failed') ?? [] });
+    observations.push({
+      name,
+      peer: values.peer,
+      elapsed_ms: Date.now() - started,
+      exit_code: result.code,
+      status: report?.status ?? 'incomplete',
+      report: report?.report ?? null,
+      limitations: report?.limitations ?? ['no-report'],
+      failures: report?.peers?.filter((peer) => peer.status === 'failed') ?? [],
+    });
   }
   console.log(JSON.stringify({ fixture: 'subtraction-v1', observations }, null, 2));
   if (observations.some((item) => item.status !== 'complete')) process.exitCode = 2;
-} finally { await fs.rm(temporary, { recursive: true, force: true }); }
+} finally {
+  await fs.rm(temporary, { recursive: true, force: true });
+}

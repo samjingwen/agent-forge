@@ -1,0 +1,9 @@
+# These command hooks take effect only after this file reaches the trusted
+# default branch and a repository gate is initialized. Do not enable branch trust.
+commands:
+  prepare: "npm ci --ignore-scripts"
+  lint: "npm run quality"
+  format: "npm run format"
+
+# Leave commands.test unset: the gate's Test agent derives targeted scenarios.
+# The complete regression suite remains in the existing GitHub CI workflow.

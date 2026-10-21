@@ -10,19 +10,28 @@ const ignored = new Set(['.git', 'node_modules', '.DS_Store', '.venv', '__pycach
 const idPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const json = (value) => JSON.stringify(value, null, 2) + '\n';
 const hash = (value) => createHash('sha256').update(value).digest('hex');
-const fail = (message) => { throw new Error(message); };
+const fail = (message) => {
+  throw new Error(message);
+};
 const at = (...parts) => path.join(root, ...parts);
 
 async function stat(file) {
-  try { return await fs.lstat(file); }
-  catch (error) { if (error.code === 'ENOENT') return null; throw error; }
+  try {
+    return await fs.lstat(file);
+  } catch (error) {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  }
 }
 
 async function readJSON(file) {
   const info = await stat(file);
   if (!info?.isFile() || info.isSymbolicLink()) fail('Expected a regular JSON file: ' + file);
-  try { return JSON.parse(await fs.readFile(file, 'utf8')); }
-  catch (error) { fail('Could not read JSON at ' + file + ': ' + error.message); }
+  try {
+    return JSON.parse(await fs.readFile(file, 'utf8'));
+  } catch (error) {
+    fail('Could not read JSON at ' + file + ': ' + error.message);
+  }
 }
 
 function validID(value, label) {
@@ -40,7 +49,13 @@ async function directory(file, optional = false) {
 
 function include(file) {
   const name = path.basename(file);
-  return !ignored.has(name) && name !== '.env' && !name.startsWith('.env.') && !name.endsWith('.local.json') && !name.endsWith('.local.jsonc');
+  return (
+    !ignored.has(name) &&
+    name !== '.env' &&
+    !name.startsWith('.env.') &&
+    !name.endsWith('.local.json') &&
+    !name.endsWith('.local.jsonc')
+  );
 }
 
 async function checkCopyTree(dir) {
@@ -54,15 +69,28 @@ async function checkCopyTree(dir) {
 }
 
 async function inspect() {
-  for (const relative of ['skills', 'plugins', 'plugins/opencode', 'plugins/claude-code', 'mcp-servers', 'packages', 'catalog', 'config', 'evals']) {
+  for (const relative of [
+    'skills',
+    'plugins',
+    'plugins/opencode',
+    'plugins/claude-code',
+    'mcp-servers',
+    'packages',
+    'catalog',
+    'config',
+    'evals',
+  ]) {
     await directory(at(relative));
   }
   const catalog = await readJSON(at('catalog/claude-bundles.json'));
   const external = await readJSON(at('catalog/external-tools.json'));
-  if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.bundles)) fail('Invalid Claude bundle catalog: expected schemaVersion 1 and bundles array.');
-  if (external.schemaVersion !== 1 || !Array.isArray(external.tools)) fail('Invalid external tools catalog: expected schemaVersion 1 and tools array.');
+  if (catalog.schemaVersion !== 1 || !Array.isArray(catalog.bundles))
+    fail('Invalid Claude bundle catalog: expected schemaVersion 1 and bundles array.');
+  if (external.schemaVersion !== 1 || !Array.isArray(external.tools))
+    fail('Invalid external tools catalog: expected schemaVersion 1 and tools array.');
   validID(catalog.marketplace?.name, 'Marketplace name');
-  if (typeof catalog.marketplace?.owner?.name !== 'string' || !catalog.marketplace.owner.name.trim()) fail('Marketplace owner.name is required.');
+  if (typeof catalog.marketplace?.owner?.name !== 'string' || !catalog.marketplace.owner.name.trim())
+    fail('Marketplace owner.name is required.');
   const skills = new Map();
   for (const entry of await fs.readdir(at('skills'), { withFileTypes: true })) {
     if (entry.name.startsWith('.')) continue;
@@ -79,8 +107,10 @@ async function inspect() {
     validID(bundle.name, 'Bundle name');
     if (names.has(bundle.name)) fail('Duplicate bundle name: ' + bundle.name);
     names.add(bundle.name);
-    if (bundle.source !== 'plugins/claude-code/' + bundle.name) fail('Bundle source must equal plugins/claude-code/' + bundle.name);
-    if (!Array.isArray(bundle.skills) || new Set(bundle.skills).size !== bundle.skills.length) fail('Bundle skills must be an array of unique skill identifiers.');
+    if (bundle.source !== 'plugins/claude-code/' + bundle.name)
+      fail('Bundle source must equal plugins/claude-code/' + bundle.name);
+    if (!Array.isArray(bundle.skills) || new Set(bundle.skills).size !== bundle.skills.length)
+      fail('Bundle skills must be an array of unique skill identifiers.');
     for (const skill of bundle.skills) {
       validID(skill, 'Skill identifier');
       if (!skills.has(skill)) fail('Unknown skill ' + skill + ' in bundle ' + bundle.name);
@@ -88,7 +118,8 @@ async function inspect() {
     const source = at(bundle.source);
     await directory(source);
     await directory(path.join(source, '.claude-plugin'));
-    if (await stat(path.join(source, 'skills'))) fail('The source plugin skills/ path is reserved for generated canonical skills: ' + source);
+    if (await stat(path.join(source, 'skills')))
+      fail('The source plugin skills/ path is reserved for generated canonical skills: ' + source);
     const manifest = await readJSON(path.join(source, '.claude-plugin/plugin.json'));
     if (manifest.name !== bundle.name) fail('Plugin manifest name must match bundle name: ' + bundle.name);
     await checkCopyTree(source);
@@ -99,20 +130,33 @@ async function inspect() {
 
 async function check() {
   const { catalog, external, skills } = await inspect();
-  console.log('Structure OK: ' + skills.size + ' skills, ' + catalog.bundles.length + ' Claude bundles, ' + external.tools.length + ' external tool records.');
-  console.log('This checks structure and packaging inputs. Run native validators and real integration checks for each component.');
+  console.log(
+    'Structure OK: ' +
+      skills.size +
+      ' skills, ' +
+      catalog.bundles.length +
+      ' Claude bundles, ' +
+      external.tools.length +
+      ' external tool records.',
+  );
+  console.log(
+    'This checks structure and packaging inputs. Run native validators and real integration checks for each component.',
+  );
 }
 
 async function buildClaude() {
   const { catalog, skills } = await inspect();
   if (catalog.bundles.length === 0) {
-    if (await stat(at('distribution/claude-code')) || await stat(at('.claude-plugin/marketplace.json'))) {
-      fail('The bundle catalog is empty but publication files still exist. Preserve or remove those obsolete files explicitly before publishing, or restore the bundle entries.');
+    if ((await stat(at('distribution/claude-code'))) || (await stat(at('.claude-plugin/marketplace.json')))) {
+      fail(
+        'The bundle catalog is empty but publication files still exist. Preserve or remove those obsolete files explicitly before publishing, or restore the bundle entries.',
+      );
     }
     console.log('No Claude bundles configured. Nothing was generated.');
     return;
   }
-  if (catalog.marketplace.owner.name === 'CHANGE_ME') fail('Set marketplace.owner.name in catalog/claude-bundles.json before building.');
+  if (catalog.marketplace.owner.name === 'CHANGE_ME')
+    fail('Set marketplace.owner.name in catalog/claude-bundles.json before building.');
   await directory(at('distribution'), true);
   await directory(at('.claude-plugin'), true);
   const target = at('distribution/claude-code');
@@ -121,21 +165,23 @@ async function buildClaude() {
   if (await stat(target)) {
     await directory(target);
     previous = await readJSON(path.join(target, markerName));
-    if (previous.generator !== 'agent-toolkit') fail('Refusing to replace an output directory not owned by this generator.');
+    if (previous.generator !== 'agent-toolkit')
+      fail('Refusing to replace an output directory not owned by this generator.');
   }
   if (await stat(marketplacePath)) {
     const info = await stat(marketplacePath);
     if (!info.isFile() || info.isSymbolicLink()) fail('Marketplace must be a regular file.');
     const currentHash = hash(await fs.readFile(marketplacePath));
-    if (!previous || previous.marketplaceHash !== currentHash) fail('Marketplace is unmanaged or edited by hand. Preserve it before using this generator.');
+    if (!previous || previous.marketplaceHash !== currentHash)
+      fail('Marketplace is unmanaged or edited by hand. Preserve it before using this generator.');
   }
   const marketplace = {
     name: catalog.marketplace.name,
     owner: catalog.marketplace.owner,
     plugins: catalog.bundles.map((bundle) => ({
       name: bundle.name,
-      source: './distribution/claude-code/' + bundle.name
-    }))
+      source: './distribution/claude-code/' + bundle.name,
+    })),
   };
   const marketplaceText = json(marketplace);
   await fs.mkdir(at('distribution'), { recursive: true });
@@ -151,11 +197,14 @@ async function buildClaude() {
         await fs.cp(skills.get(skill), path.join(output, 'skills', skill), { recursive: true, filter: include });
       }
     }
-    await fs.writeFile(path.join(stage, markerName), json({
-      generator: 'agent-toolkit',
-      schemaVersion: 1,
-      marketplaceHash: hash(marketplaceText)
-    }));
+    await fs.writeFile(
+      path.join(stage, markerName),
+      json({
+        generator: 'agent-toolkit',
+        schemaVersion: 1,
+        marketplaceHash: hash(marketplaceText),
+      }),
+    );
     await fs.mkdir(at('.claude-plugin'), { recursive: true });
     marketplaceTemp = at('.claude-plugin/.marketplace-' + randomUUID() + '.json');
     await fs.writeFile(marketplaceTemp, marketplaceText, { flag: 'wx' });
@@ -178,8 +227,12 @@ async function buildClaude() {
     if (marketplaceTemp) await fs.rm(marketplaceTemp, { force: true });
   }
   console.log('Built ' + catalog.bundles.length + ' Claude plugin bundles in distribution/claude-code/.');
-  console.log('Commit distribution/claude-code/ and .claude-plugin/marketplace.json when publishing this repository as a marketplace.');
-  console.log('This copies files. Compile and package runtime dependencies separately, then validate and test the installed plugins.');
+  console.log(
+    'Commit distribution/claude-code/ and .claude-plugin/marketplace.json when publishing this repository as a marketplace.',
+  );
+  console.log(
+    'This copies files. Compile and package runtime dependencies separately, then validate and test the installed plugins.',
+  );
 }
 
 async function opencodeConfig() {
@@ -195,11 +248,13 @@ async function opencodeConfig() {
       }
     }
   }
-  process.stdout.write(json({
-    $schema: 'https://opencode.ai/config.json',
-    skills: [at('skills')],
-    plugins: plugins.sort()
-  }));
+  process.stdout.write(
+    json({
+      $schema: 'https://opencode.ai/config.json',
+      skills: [at('skills')],
+      plugins: plugins.sort(),
+    }),
+  );
 }
 
 try {
