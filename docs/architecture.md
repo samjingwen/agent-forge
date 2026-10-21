@@ -14,6 +14,11 @@ Hardlook is a self-contained skill, not a native plugin.
 Its runtime helpers and harness adapters stay in `skills/hardlook/` so a skill-only install remains complete.
 Its maintainer documentation, tests, and evaluations live in `docs/hardlook/`, `tests/hardlook/`, and `evals/hardlook/`.
 
+Plainspoken follows the same self-contained skill boundary in `skills/plainspoken/`.
+Its optional Python linter has no third-party dependencies and remains bundled with its references, examples, and upstream license.
+Its docs, tests, and manual evaluation cases live in `docs/plainspoken/`, `tests/plainspoken/`, and `evals/plainspoken/`.
+The linter is an optional text check, not a repository-wide writing gate or a rewrite-fidelity validator.
+
 The OpenCode helper targets [OpenCode v2](https://opencode.ai/v2/docs/plugins/): `plugins` is an array, and relative plugin paths resolve against the configuration file.
 [Skill source paths](https://opencode.ai/v2/docs/skills/) resolve relative to the active working directory instead.
 The helper prints absolute paths to avoid that ambiguity.
