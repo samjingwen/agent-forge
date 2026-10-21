@@ -1,0 +1,47 @@
+{
+  "purpose": "Manual or opt-in model evaluation of rewrite fidelity; not an automated accuracy claim",
+  "cases": [
+    {
+      "id": "uncertain-error",
+      "mode": "strict",
+      "input": "An error may have occurred while processing your request due to a possible mismatch in the expected data format, which could be caused by an outdated client version.",
+      "mustPreserve": ["The error is uncertain", "The format mismatch is a possible cause", "The outdated client is a possible cause of that mismatch"],
+      "mustNotAdd": ["A confirmed failure", "A most-common-cause claim", "A new corrective instruction"]
+    },
+    {
+      "id": "recommendation-and-prerequisite",
+      "mode": "strict",
+      "input": "Once the upstream job has completed and assuming no errors were raised, the downstream agent should proceed to consume the output artifact, though partial artifacts are sometimes produced under timeout conditions.",
+      "mustPreserve": ["Upstream completion and no raised errors are prerequisites", "The downstream action is a recommendation, not a requirement", "Timeouts sometimes produce partial artifacts"],
+      "mustNotAdd": ["A mandatory downstream action", "A new artifact-completeness check"]
+    },
+    {
+      "id": "automatic-action-fallback",
+      "mode": "strict",
+      "input": "The tool attempts to synchronize the configured backends and may resolve conflicts automatically if the configured strategy permits it, otherwise it reports the conflict for manual review.",
+      "mustPreserve": ["Synchronization is attempted, not guaranteed", "Automatic resolution requires the configured strategy to permit it", "An unresolved conflict is reported even if automatic resolution was permitted"],
+      "mustNotAdd": ["A guarantee that automatic resolution succeeds", "An invented strategy-reading step"]
+    },
+    {
+      "id": "literal-contracts",
+      "mode": "strict",
+      "input": "If retry_count is below 3 and allow_retry is true, the agent may attempt to run sync --dry-run again.",
+      "mustPreserve": ["retry_count", "allow_retry", "The strict below-3 boundary", "Both conditions must hold", "sync --dry-run", "Permission to attempt, not an obligation or guaranteed success"],
+      "mustNotAdd": ["Renamed identifiers or flags", "An inclusive boundary of 3", "Execution of the command"]
+    },
+    {
+      "id": "descriptive-claims",
+      "mode": "ste-flavored",
+      "input": "Our caching layer is designed to slot seamlessly into your existing stack with no vendor lock-in; it leverages semantic similarity to dramatically reduce cache misses in LLM workloads.",
+      "mustPreserve": ["Integration is a design intent", "No vendor lock-in is a stated claim", "Semantic similarity is the stated mechanism", "The workload is LLM requests"],
+      "mustNotAdd": ["A data-locality guarantee", "Measured performance improvements", "A description of ordinary cache internals"]
+    },
+    {
+      "id": "compliant-input",
+      "mode": "strict",
+      "input": "The agent reads the file.",
+      "mustPreserve": ["The complete original text without unnecessary edits"],
+      "mustNotAdd": ["A preamble", "A mode announcement", "A rule table unless requested"]
+    }
+  ]
+}

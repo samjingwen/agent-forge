@@ -5,6 +5,9 @@
 The committed project currently maintains JavaScript ESM in repository tooling, Hardlook helpers, tests, and evaluation tooling.
 The starting inventory contains 12 `.mjs` modules and no TypeScript, Java, or maintained Python source.
 Native integration directories are reserved for future components; they are not evidence that another language is already maintained.
+Plainspoken adds a verbatim upstream-pinned Python linter, not maintained project Python.
+Keep that linter, its license, and its invalid fixture byte-identical to their recorded upstream revision rather than running Ruff or another formatter over them.
+Plainspoken's maintained JavaScript tests remain covered by ESLint and Prettier, while real Python subprocesses verify the pinned helper's behavior.
 
 Private repository development requires Node 22.13 or later, approved for the supported ESLint 10 toolchain.
 Installed Hardlook helpers still require Node 22 or later and Git, without npm runtime dependencies.
@@ -25,7 +28,7 @@ An upstream-pinned Python helper is not maintained project Python merely because
 | `npm run quality` | Both lint and formatting checks, with failure propagated. |
 | `npm run format` | Separate formatting fix for those same extensions; review its diff. |
 | `npm run test:quality` | Behavioral tests that invoke the actual tools and configured hooks. |
-| `npm test` | Quality consumer tests plus the existing Hardlook behavior and relocation tests. |
+| `npm test` | Quality and packaging consumers plus both skills' behavior and relocation tests. |
 
 Prettier owns layout: two-space indentation, single quotes, semicolons, LF endings, and a 120-column print width.
 ESLint owns correctness and focused design checks rather than competing whitespace rules.

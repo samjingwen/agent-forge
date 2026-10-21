@@ -1,0 +1,24 @@
+{
+  "name": "plainspoken",
+  "version": "0.1.0",
+  "entrypoint": "SKILL.md",
+  "distribution": "self-contained-agent-skill",
+  "modes": ["strict", "ste-flavored"],
+  "helperPrerequisites": { "python": ">=3.11" },
+  "runtimePythonDependencies": [],
+  "provenance": [
+    {
+      "project": "asd-ste100-skill",
+      "version": "0.4.0",
+      "revision": "3944283c183eea13fe5bd902b572da3b4de8bf44",
+      "source": "https://github.com/danyuchn/asd-ste100-skill",
+      "license": "MIT",
+      "use": "Adapted STE-inspired rewrite instructions, references, examples, and unchanged structural linter",
+      "unchangedFiles": {
+        "scripts/ste-lint.py": "32263de1b6b74cc3f83846ae8545ba6c57994db0ba1ec1c8d842c310427886d1",
+        "LICENSE": "d3c674e8592076c9021a59b55177adbcba6fd7e1710082becb922522b22ec672",
+        "examples/linter-edge-cases.md": "b6cc08af876014453b0c72d26ee4bfaeed1e9a154b5046947392752911ce1774"
+      }
+    }
+  ]
+}

@@ -20,13 +20,16 @@
     "test": "node --test tests/*/*.test.mjs",
     "test:quality": "node --test tests/quality/*.test.mjs",
     "test:hardlook": "node --test tests/hardlook/*.test.mjs",
+    "test:plainspoken": "node --test tests/plainspoken/*.test.mjs",
+    "lint:plainspoken": "python3 skills/plainspoken/scripts/ste-lint.py",
     "doctor:hardlook": "node skills/hardlook/scripts/hardlook.mjs doctor",
     "build:claude": "node tooling/agent-toolkit.mjs build:claude",
     "config:opencode": "node tooling/agent-toolkit.mjs config:opencode"
   },
   "pi": {
     "skills": [
-      "./skills/hardlook"
+      "./skills/hardlook",
+      "./skills/plainspoken"
     ]
   },
   "devDependencies": {
