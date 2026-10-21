@@ -41,7 +41,8 @@ Hardlook was migrated from [samjingwen/hardlook](https://github.com/samjingwen/h
 Use one `.git` at the repository root.
 Package directories are ordinary folders, not nested Git repositories.
 `pnpm-workspace.yaml` supports JavaScript and TypeScript packages; individual modules can retain Gradle or uv projects when appropriate.
-The repository helper and Hardlook need **Node.js 22 or later and no npm dependencies**.
+Installed Hardlook helpers need **Node.js 22 or later and no npm runtime dependencies**.
+Private repository development requires **Node.js 22.13 or later** for the supported ESLint toolchain.
 Hardlook's CLI also requires Git.
 
 ## Development
@@ -49,19 +50,25 @@ Hardlook's CLI also requires Git.
 Run these commands from the repository root:
 
 ```bash
+npm ci --ignore-scripts
+npm run quality
 npm run check
 npm test
 npm run config:opencode
 npm run build:claude
 ```
 
-No dependency installation is required.
+Development dependencies are exact-pinned and installed from `package-lock.json`.
+They are not dependencies of the installed skill.
 You can use `pnpm run` for the same scripts.
 Run `npm run test:hardlook` for Hardlook alone, or `npm run doctor:hardlook` for metadata-only harness availability checks.
+Run `npm run test:quality` for executable quality-tool and hook-consumer tests.
+`npm run quality` checks without changing files; `npm run format` is the separate formatting fix.
+See [code quality](docs/quality.md) for language coverage, ownership exclusions, CI, and the trusted-default-branch no-mistakes hook boundary.
 
 `check` performs basic layout, JSON, catalog, and path checks, including checking that discovered skill folders contain `SKILL.md`.
 It does not validate the complete skill specification, YAML, runtime APIs, or plugin behavior.
-`test` exercises Hardlook's behavior, adapter contracts, installation, and relocation without live model calls.
+`test` exercises Hardlook's behavior, adapter contracts, installation and relocation, and the quality tools' real passing/failing consumers without live model calls.
 
 `config:opencode` prints JSON containing absolute paths to the canonical skills directory and the OpenCode package directories it discovers one level under `plugins/opencode/`.
 Review the output and merge the relevant settings into your OpenCode configuration.

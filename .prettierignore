@@ -1,0 +1,18 @@
+# Dependency trees, local worktrees, and build outputs are not maintained source.
+**/node_modules/**
+**/.env
+**/.env.*
+.worktrees/**
+.cache/**
+coverage/**
+dist/**
+build/**
+plugins/**/dist/**
+plugins/**/build/**
+mcp-servers/**/dist/**
+mcp-servers/**/build/**
+packages/**/dist/**
+packages/**/build/**
+
+# Claude distribution is generated from canonical skills and wrapper sources.
+distribution/claude-code/**

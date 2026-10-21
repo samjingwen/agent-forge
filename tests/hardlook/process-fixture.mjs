@@ -22,5 +22,8 @@ if (role === 'descendant') {
   process.on('SIGTERM', () => module.cancelExecutions?.());
   try {
     await execute(process.execPath, [self, 'leader', record, ...(hold ? ['hold'] : [])], { timeoutMs: 30_000 });
-  } catch (error) { console.error(error.kind); process.exitCode = 2; }
+  } catch (error) {
+    console.error(error.kind);
+    process.exitCode = 2;
+  }
 }

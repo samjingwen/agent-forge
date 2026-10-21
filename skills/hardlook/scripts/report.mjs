@@ -1,12 +1,20 @@
 import fs from 'node:fs/promises';
 
 export const schema = JSON.parse(await fs.readFile(new URL('../schemas/report.json', import.meta.url), 'utf8'));
-const pipelineSchema = JSON.parse(await fs.readFile(new URL('../schemas/no-mistakes-v1.84.json', import.meta.url), 'utf8'));
+const pipelineSchema = JSON.parse(
+  await fs.readFile(new URL('../schemas/no-mistakes-v1.84.json', import.meta.url), 'utf8'),
+);
 
 function validate(value, rule, location = 'report') {
   const types = Array.isArray(rule.type) ? rule.type : [rule.type];
-  const type = value === null ? 'null' : Array.isArray(value) ? 'array'
-    : typeof value === 'number' && Number.isInteger(value) ? 'integer' : typeof value;
+  const type =
+    value === null
+      ? 'null'
+      : Array.isArray(value)
+        ? 'array'
+        : typeof value === 'number' && Number.isInteger(value)
+          ? 'integer'
+          : typeof value;
   if (!types.includes(type)) throw new Error(`${location}: invalid type`);
   if (rule.enum && !rule.enum.includes(value)) throw new Error(`${location}: invalid value`);
   if (type === 'string' && value.trim().length < (rule.minLength ?? 0)) throw new Error(`${location}: empty text`);
@@ -44,17 +52,30 @@ export function covered(report, paths) {
 }
 
 function jsonText(text) {
-  return JSON.parse(text.trim().replace(/^```(?:json)?\s*\n/, '').replace(/\n```\s*$/, ''));
+  return JSON.parse(
+    text
+      .trim()
+      .replace(/^```(?:json)?\s*\n/, '')
+      .replace(/\n```\s*$/, ''),
+  );
 }
 
 // Only final assistant/result records are candidates, not reasoning/tool output.
 export function decodeReport(output) {
   let direct;
-  try { direct = JSON.parse(output); } catch {}
+  try {
+    direct = JSON.parse(output);
+  } catch {}
   if (direct?.findings) return direct;
-  const records = direct ? [direct] : output.split(/\r?\n/).flatMap((line) => {
-    try { return [JSON.parse(line)]; } catch { return []; }
-  });
+  const records = direct
+    ? [direct]
+    : output.split(/\r?\n/).flatMap((line) => {
+        try {
+          return [JSON.parse(line)];
+        } catch {
+          return [];
+        }
+      });
   let candidate;
   for (const record of records) {
     if (record.is_error || record.type === 'error' || record.type === 'turn.failed') {
@@ -67,7 +88,11 @@ export function decodeReport(output) {
     else if (record.type === 'item.completed' && record.item?.type === 'agent_message') candidate = record.item.text;
     else if (record.type === 'agent_end') {
       const last = record.messages?.filter((message) => message.role === 'assistant').at(-1);
-      if (last) candidate = last.content?.filter((part) => part.type === 'text').map((part) => part.text).join('');
+      if (last)
+        candidate = last.content
+          ?.filter((part) => part.type === 'text')
+          .map((part) => part.text)
+          .join('');
     }
   }
   if (candidate === undefined) throw new Error('no final structured report');
@@ -83,12 +108,18 @@ export function pipelineReport(result) {
     risk_rationale: report.risk_rationale,
     risk_scope: 'source-or-external',
     reviewed_paths: report.reviewed_paths,
-    findings: report.findings.filter((item) => !['dismissed', 'noted'].includes(item.judgment)).map((item, i) => ({
-      id: `H${i + 1}`, severity: item.severity, file: item.file,
-      ...(item.line === null ? {} : { line: item.line }),
-      action: item.action, source: 'hardlook', review_scope: 'source',
-      description: `Evidence: ${item.evidence}\nConsequence: ${item.consequence}\nSuggested fix: ${item.suggestion}`,
-    })),
+    findings: report.findings
+      .filter((item) => !['dismissed', 'noted'].includes(item.judgment))
+      .map((item, i) => ({
+        id: `H${i + 1}`,
+        severity: item.severity,
+        file: item.file,
+        ...(item.line === null ? {} : { line: item.line }),
+        action: item.action,
+        source: 'hardlook',
+        review_scope: 'source',
+        description: `Evidence: ${item.evidence}\nConsequence: ${item.consequence}\nSuggested fix: ${item.suggestion}`,
+      })),
   };
   validate(output, pipelineSchema, 'no-mistakes');
   return output;

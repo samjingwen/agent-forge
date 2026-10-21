@@ -9,17 +9,31 @@
     "url": "git+https://github.com/samjingwen/agent-toolkit.git"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22.13.0"
   },
   "scripts": {
     "check": "node tooling/agent-toolkit.mjs check",
+    "lint": "eslint . --max-warnings 0",
+    "format:check": "prettier --check \"**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}\"",
+    "format": "prettier --write \"**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}\"",
+    "quality": "npm run lint && npm run format:check",
     "test": "node --test tests/*/*.test.mjs",
+    "test:quality": "node --test tests/quality/*.test.mjs",
     "test:hardlook": "node --test tests/hardlook/*.test.mjs",
     "doctor:hardlook": "node skills/hardlook/scripts/hardlook.mjs doctor",
     "build:claude": "node tooling/agent-toolkit.mjs build:claude",
     "config:opencode": "node tooling/agent-toolkit.mjs config:opencode"
   },
   "pi": {
-    "skills": ["./skills/hardlook"]
+    "skills": [
+      "./skills/hardlook"
+    ]
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0",
+    "globals": "17.13.0",
+    "prettier": "3.9.10",
+    "yaml": "2.9.1"
   }
 }
