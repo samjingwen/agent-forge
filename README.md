@@ -101,11 +101,24 @@ No Claude bundles are currently configured; Hardlook and Plainspoken are install
 Read [Hardlook development](docs/hardlook/development.md), [architecture](docs/architecture.md), and [official references](docs/sources.md) before changing the relevant component.
 For Plainspoken, read its [usage and development notes](docs/plainspoken/README.md).
 
-## Add a skill and a Claude bundle
+## Optional Claude bundle example
 
-1. Put a skill and its supporting files in `skills/spring-boot-performance-review/`, including `SKILL.md`.
-2. Create the wrapper at `plugins/claude-code/backend-review/`, with `.claude-plugin/plugin.json` whose `name` is `backend-review`.
-   Add any Claude-specific agents, hooks, or MCP configuration there.
+This example packages the existing Hardlook skill as a hypothetical `hardlook-review` Claude plugin.
+The wrapper and catalog entry below are not currently configured; use the direct skill installation above unless you want to add a bundle.
+
+1. Reuse the canonical skill and its supporting files in `skills/hardlook/`, including `SKILL.md`.
+2. Create `plugins/claude-code/hardlook-review/.claude-plugin/plugin.json`:
+
+   ```json
+   {
+     "name": "hardlook-review",
+     "version": "0.1.0",
+     "description": "Hardlook code review skill for Claude Code.",
+     "author": { "name": "Sam Jing Wen" }
+   }
+   ```
+
+   Add any Claude-specific agents, hooks, or MCP configuration under `plugins/claude-code/hardlook-review/`.
    Do not add a `skills/` directory to the wrapper: the builder supplies it.
 3. Add the bundle to `catalog/claude-bundles.json`:
 
@@ -118,24 +131,24 @@ For Plainspoken, read its [usage and development notes](docs/plainspoken/README.
   },
   "bundles": [
     {
-      "name": "backend-review",
-      "source": "plugins/claude-code/backend-review",
-      "skills": ["spring-boot-performance-review"]
+      "name": "hardlook-review",
+      "source": "plugins/claude-code/hardlook-review",
+      "skills": ["hardlook"]
     }
   ]
 }
 ```
 
-4. Run `check`, then `build:claude`.
+4. Run `npm run check`, then `npm run build:claude`.
    Validate and try the resulting plugin in Claude Code:
 
 ```bash
-claude plugin validate ./distribution/claude-code/backend-review
-claude --plugin-dir ./distribution/claude-code/backend-review
+claude plugin validate ./distribution/claude-code/hardlook-review
+claude --plugin-dir ./distribution/claude-code/hardlook-review
 ```
 
-The builder copies the wrapper and selected skills into `distribution/claude-code/backend-review/`.
-It generates the root marketplace entry with `source: "./distribution/claude-code/backend-review"`.
+The builder copies the wrapper and selected skills into `distribution/claude-code/hardlook-review/`.
+It generates the root marketplace entry with `source: "./distribution/claude-code/hardlook-review"`.
 
 **Commit generated distributions and the generated marketplace before publishing the repository as a marketplace.**
 Consumers need those files in the repository they fetch.
