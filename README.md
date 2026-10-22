@@ -1,8 +1,10 @@
 # Agent Forge
 
-One Git repository for reusable agent skills, OpenCode plugins, Claude Code plugins, MCP servers, and the code they share.
+Agent Forge keeps reusable agent skills, OpenCode plugins, Claude Code plugins, MCP servers, and their shared code in one Git repository.
 
-Keep the reusable instructions in one place, retain each runtime's native plugin format, and produce installable bundles from those sources.
+Keep reusable instructions in one place.
+Retain each runtime's native plugin format.
+Produce installable bundles from those sources.
 
 ## Install Hardlook
 
@@ -13,12 +15,17 @@ It supports routine review, independent deep review, and structural audits.
 npx skills add samjingwen/agent-forge --skill hardlook
 ```
 
-Choose your harness, start a new session, and ask for "Hardlook review this change", "Hardlook deep", or "Hardlook structure".
+Choose your harness.
+Start a new session.
+Ask for "Hardlook review this change", "Hardlook deep", or "Hardlook structure".
 For OpenCode's slash-menu command, follow the [Hardlook setup instructions](docs/hardlook/README.md#opencode-slash-menu).
-Existing Hardlook installations continue to work; use this repository for future installs and updates.
+Existing Hardlook installations continue to work.
+Use this repository for future installs and updates.
 
-Hardlook was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook), with its Git history, tests, and license notices preserved.
-The repository and private package are named `agent-forge`; former `samjingwen/agent-toolkit` GitHub URLs redirect to the current repository.
+Hardlook was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook).
+The migration preserved its Git history, tests, and license notices.
+The repository and private package use the name `agent-forge`.
+Former `samjingwen/agent-toolkit` GitHub URLs redirect to this repository.
 
 ## Install Plainspoken
 
@@ -33,7 +40,8 @@ npx skills add samjingwen/agent-forge --skill plainspoken
 Ask your agent to "Use Plainspoken to disambiguate this text" or "Apply Simplified Technical English and show the before/after table".
 The skill returns rewritten text alone by default.
 Its optional Python linter checks structural patterns, not semantic fidelity or certified STE compliance.
-It adapts [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill), with the upstream MIT license and attribution preserved.
+Plainspoken adapts [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-skill).
+It preserves the upstream MIT license and attribution.
 
 ## Repository layout
 
@@ -42,7 +50,7 @@ It adapts [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-ski
 | `skills/<name>/SKILL.md` | Canonical skill instructions and supporting files |
 | `plugins/opencode/<package>/` | Native OpenCode plugin packages |
 | `plugins/claude-code/<bundle>/` | Claude wrapper sources for generated bundles |
-| `mcp-servers/<package>/` | Independently runnable MCP server implementations |
+| `mcp-servers/<package>/` | MCP server implementations that can run independently |
 | `packages/<package>/` | Shared libraries used by plugins and servers |
 | `config/<runtime>/` | Runtime configuration examples and templates |
 | `catalog/claude-bundles.json` | This repository's Claude bundle declarations |
@@ -56,11 +64,18 @@ It adapts [danyuchn/asd-ste100-skill](https://github.com/danyuchn/asd-ste100-ski
 
 Use one `.git` at the repository root.
 Package directories are ordinary folders, not nested Git repositories.
-`pnpm-workspace.yaml` supports JavaScript and TypeScript packages; individual modules can retain Gradle or uv projects when appropriate.
-Installed Hardlook helpers need **Node.js 22 or later and no npm runtime dependencies**.
+`pnpm-workspace.yaml` supports JavaScript and TypeScript packages.
+Individual modules can retain Gradle or uv projects when appropriate.
+
+### Requirements
+
+Installed Hardlook helpers require **Node.js 22 or later**.
+They have **no npm runtime dependencies**.
 Private repository development requires **Node.js 22.13 or later** for the supported ESLint toolchain.
 Hardlook's CLI also requires Git.
-Plainspoken's optional linter and its tests require **Python 3.11 or later**, with no third-party Python packages.
+
+Plainspoken's optional linter and its tests require **Python 3.11 or later**.
+Neither requires third-party Python packages.
 Using Plainspoken's rewrite instructions in an agent does not require Python.
 
 ## Development
@@ -76,27 +91,43 @@ npm run config:opencode
 npm run build:claude
 ```
 
-Development dependencies are exact-pinned and installed from `package-lock.json`.
-They are not dependencies of the installed skill.
+Development dependencies use exact version pins and come from `package-lock.json`.
+The installed skill does not depend on them.
 You can use `pnpm run` for the same scripts.
-Run `npm run test:hardlook` for Hardlook alone, or `npm run doctor:hardlook` for metadata-only harness availability checks.
+
+For Hardlook alone, run `npm run test:hardlook`.
+For metadata-only harness availability checks, run `npm run doctor:hardlook`.
 Run `npm run test:quality` for executable quality-tool and hook-consumer tests.
 Run `npm run test:plainspoken` for Plainspoken's helper and bundle tests.
 Use `npm run lint:plainspoken -- --json <file>` to check a selected text file without changing it.
-`npm run quality` checks without changing files; `npm run format` is the separate formatting fix.
+
+`npm run quality` checks without changing files.
+`npm run format` is the separate formatting fix.
 See [code quality](docs/quality.md) for language coverage, ownership exclusions, CI, and the trusted-default-branch no-mistakes hook boundary.
 
-`check` performs basic layout, JSON, catalog, and path checks, including checking that discovered skill folders contain `SKILL.md`.
+`check` performs basic layout, JSON, catalog, and path checks.
+It also checks that each discovered skill folder contains `SKILL.md`.
 It does not validate the complete skill specification, YAML, runtime APIs, or plugin behavior.
-`test` exercises Hardlook's behavior and adapters, Plainspoken's structural linter, both skills' installation/relocation boundaries, and the quality tools' real passing/failing consumers.
-It makes no live model calls and does not prove model-review accuracy or rewrite fidelity.
 
-`config:opencode` prints JSON containing absolute paths to the canonical skills directory and the OpenCode package directories it discovers one level under `plugins/opencode/`.
-Review the output and merge the relevant settings into your OpenCode configuration.
+`test` exercises:
+
+- Hardlook's behavior and adapters.
+- Plainspoken's structural linter.
+- Both skills' installation and relocation boundaries.
+- Real passing and failing consumers of the quality tools.
+
+These tests make no live model calls.
+They do not prove model-review accuracy or rewrite fidelity.
+
+`config:opencode` prints JSON with absolute paths to the canonical skills directory.
+The JSON also contains absolute paths to the OpenCode package directories it discovers one level under `plugins/opencode/`.
+Review the output.
+Merge the relevant settings into your OpenCode configuration.
 The command does not install plugins or change global settings.
 
 `build:claude` creates bundles only when the catalog contains bundle entries.
-No Claude bundles are currently configured; Hardlook and Plainspoken are installed directly as skills.
+No Claude bundles are currently configured.
+Hardlook and Plainspoken are installed directly as skills.
 
 Read [Hardlook development](docs/hardlook/development.md), [architecture](docs/architecture.md), and [official references](docs/sources.md) before changing the relevant component.
 For Plainspoken, read its [usage and development notes](docs/plainspoken/README.md).
@@ -104,7 +135,8 @@ For Plainspoken, read its [usage and development notes](docs/plainspoken/README.
 ## Optional Claude bundle example
 
 This example packages the existing Hardlook skill as a hypothetical `hardlook-review` Claude plugin.
-The wrapper and catalog entry below are not currently configured; use the direct skill installation above unless you want to add a bundle.
+The wrapper and catalog entry below are not currently configured.
+Use the direct skill installation above unless you want to add a bundle.
 
 1. Reuse the canonical skill and its supporting files in `skills/hardlook/`, including `SKILL.md`.
 2. Create `plugins/claude-code/hardlook-review/.claude-plugin/plugin.json`:
@@ -119,7 +151,8 @@ The wrapper and catalog entry below are not currently configured; use the direct
    ```
 
    Add any Claude-specific agents, hooks, or MCP configuration under `plugins/claude-code/hardlook-review/`.
-   Do not add a `skills/` directory to the wrapper: the builder supplies it.
+   Do not add a `skills/` directory to the wrapper.
+   The builder supplies it.
 3. Add the bundle to `catalog/claude-bundles.json`:
 
 ```json
@@ -139,8 +172,10 @@ The wrapper and catalog entry below are not currently configured; use the direct
 }
 ```
 
-4. Run `npm run check`, then `npm run build:claude`.
-   Validate and try the resulting plugin in Claude Code:
+4. Run `npm run check`.
+   Then run `npm run build:claude`.
+   Validate the resulting plugin in Claude Code.
+   Try the plugin in Claude Code:
 
 ```bash
 claude plugin validate ./distribution/claude-code/hardlook-review
@@ -150,9 +185,11 @@ claude --plugin-dir ./distribution/claude-code/hardlook-review
 The builder copies the wrapper and selected skills into `distribution/claude-code/hardlook-review/`.
 It generates the root marketplace entry with `source: "./distribution/claude-code/hardlook-review"`.
 
-**Commit generated distributions and the generated marketplace before publishing the repository as a marketplace.**
+**Before publishing the repository as a marketplace, commit generated distributions and the generated marketplace.**
 Consumers need those files in the repository they fetch.
-Edit canonical sources and rebuild; do not edit generated files by hand.
+Edit canonical sources.
+Rebuild the generated files.
+Do not edit generated files by hand.
 
 ## License
 
