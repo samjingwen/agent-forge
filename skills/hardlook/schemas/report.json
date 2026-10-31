@@ -21,7 +21,19 @@
           "evidence": { "type": "string", "minLength": 1 },
           "consequence": { "type": "string", "minLength": 1 },
           "suggestion": { "type": "string", "minLength": 1 },
-          "action": { "type": "string", "enum": ["auto-fix", "ask-user", "no-op"] }
+          "action": { "type": "string", "enum": ["auto-fix", "ask-user", "no-op"] },
+          "reproduction": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Optional check proposal or reported output, never independently verified by the read-only runner. not-run requires observed=null; reported-unverified requires a string, including an empty string for no output. The helper also validates this status/output relationship.",
+            "required": ["status", "command", "expected", "observed"],
+            "properties": {
+              "status": { "type": "string", "enum": ["not-run", "reported-unverified"] },
+              "command": { "type": "string", "minLength": 1 },
+              "expected": { "type": "string" },
+              "observed": { "type": ["string", "null"] }
+            }
+          }
         }
       }
     }

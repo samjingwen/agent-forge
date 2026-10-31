@@ -57,7 +57,7 @@ const report = {
   reviewed_paths: model === 'partial' ? [] : packet.changed_paths,
   findings: [],
 };
-if (model === 'finding')
+if (model === 'finding' || model.startsWith('repro-'))
   report.findings.push({
     file: packet.changed_paths[0],
     line: 1,
@@ -68,6 +68,33 @@ if (model === 'finding')
     suggestion: 'Correct the changed calculation.',
     action: 'auto-fix',
   });
+if (model.startsWith('repro-')) {
+  const notRun = model === 'repro-not-run';
+  report.findings[0].reproduction = {
+    status: notRun ? 'not-run' : 'reported-unverified',
+    command: process.env.HARDLOOK_TEST_REPRO_COMMAND ?? 'node calc.js',
+    expected: '1\n',
+    observed: notRun ? null : '2\n',
+  };
+  if (model === 'repro-tampered' && input.includes('INDEPENDENT_REPORTS')) {
+    report.findings[0].reproduction.observed = '3\n';
+  }
+  if (model === 'repro-tampered-command' && input.includes('INDEPENDENT_REPORTS')) {
+    report.findings[0].reproduction.command = 'node different.js';
+  }
+  if (model === 'repro-tampered-expected' && input.includes('INDEPENDENT_REPORTS')) {
+    report.findings[0].reproduction.expected = '0\n';
+  }
+  if (model === 'repro-tampered-file' && input.includes('INDEPENDENT_REPORTS')) {
+    report.findings[0].file = 'other.js';
+  }
+  if (model === 'repro-peer-command') report.findings[0].reproduction.command = 'node different.js';
+  if (model === 'repro-peer-expected') report.findings[0].reproduction.expected = '0\n';
+  if (model === 'repro-verified') report.findings[0].reproduction.status = 'verified';
+  if (model === 'repro-missing-output') report.findings[0].reproduction.observed = null;
+  if (model === 'repro-inconsistent') report.findings[0].reproduction.status = 'not-run';
+  if (model === 'repro-empty') report.findings[0].reproduction.observed = '';
+}
 if (harness === 'opencode') console.log(JSON.stringify({ type: 'text', part: { text: JSON.stringify(report) } }));
 else if (harness === 'claude-code') console.log(JSON.stringify({ type: 'result', structured_output: report }));
 else if (harness === 'codex')

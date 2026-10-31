@@ -29,6 +29,13 @@ lead's job is to inspect and contextualize, not count votes. A justified single
 implementation, required compatibility path, or framework/security boundary is
 not automatically complexity to delete.
 
+The October 2026 pstack evidence adaptation distinguishes proposed checks from reported output rather than requiring every finding to have an executable reproduction.
+Hardlook retains concrete static security and structural findings, read-only peer/lead invocations, explicit model selection, and honest failed-panel reporting.
+The optional reproduction object preserves command, expected result, observed output, and status without executing commands or certifying a model's claims.
+The deep lead may propose a new unrun check, but reported observations must match a peer's file, command, expected result, and output exactly.
+This is structured evidence lineage, not proof of execution or semantic validation of free text.
+Independent reruns and execution receipts belong to the authorized caller or outer pipeline.
+
 ## Frozen input and honest output
 
 The packet pins scope, base, HEAD, intended behavior, selected source, and project

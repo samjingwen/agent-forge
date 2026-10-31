@@ -22,6 +22,9 @@ Missing CLIs are an availability limit, not evidence of failed authentication.
 Each adapter documents its source interface and model/permission assumptions.
 New CLI versions must be exercised before extending native claims.
 
+The 0.2.0 reproduction-evidence contract is covered by deterministic native-shaped fixtures, including installed relocation and deep synthesis failure handling.
+That coverage does not extend the historical native CLI or live model-quality claims below.
+
 On 2026-10-11, OpenCode reported the introduced subtraction defect with a
 concrete input and returned empty findings for the clean equivalent change.
 Claude's installed executable rejected credentials before returning a review.

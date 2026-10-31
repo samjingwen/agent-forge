@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { packet } from './context.mjs';
-import { schema, covered } from './report.mjs';
+import { schema, covered, validateSynthesis } from './report.mjs';
 import { selector, runPeer } from './adapters.mjs';
 
 const load = (relative) => fs.readFile(new URL(`../${relative}`, import.meta.url), 'utf8');
@@ -92,7 +92,10 @@ export async function review(options) {
     if (mode === 'deep' && results.every((item) => item.status === 'ok')) {
       try {
         leadResult = await runPeer(lead, { ...common, prompt: await promptFor(context, mode, results) });
-        report = leadResult.report;
+        report = validateSynthesis(
+          leadResult.report,
+          results.map((item) => item.report),
+        );
       } catch (error) {
         leadResult = { status: 'failed', reason: error.kind ?? 'invalid-report' };
       }

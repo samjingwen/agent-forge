@@ -17,6 +17,11 @@ Its existing `review.path_instructions` adds trusted review guidance; global
    `reviewed_paths`. Evidence, consequence, and remedy remain in the description.
 5. The existing findings gate and fix/re-review loop handle the result.
 
+Optional reproduction details stay in the finding description: proposed versus reported status, command, expected result, observed output, and verification limits.
+No new fields are added to the pinned pipeline schema.
+Reported output is not independently confirmed by Hardlook, and a reproduction command does not authorize the reviewer to execute checks or take over another duty.
+Concrete static findings remain valid without reproduction data.
+
 The core CLI can emit compatible standalone fields with `--format no-mistakes`.
 That output is not an external-result import API and does not drive AXI or
 replace a core pipeline step. A partial report cannot emit a pipeline verdict.

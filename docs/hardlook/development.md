@@ -27,4 +27,4 @@ Do not delegate the implementation itself to subagents.
 
 Hardlook moved from `samjingwen/hardlook` at revision `58b432e65aa0a9cf793694cf98fad12d9677bfc6`.
 The migration merge retains the standalone repository's Git history.
-The self-contained skill remains version `0.1.1`; Agent Forge's root package version is independent.
+The migrated self-contained skill was version `0.1.1`; its current version lives in `skills/hardlook/manifest.json` and is independent of Agent Forge's root package version.
