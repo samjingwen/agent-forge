@@ -30,9 +30,8 @@ there are no runtime npm dependencies or runtime downloads of upstream rubrics.
 
 ## OpenCode slash menu
 
-OpenCode 1.19.0 registers skills in its backend command catalogue but filters
-`source: "skill"` entries out of slash autocomplete. The skill's
-`metadata.opencode/slash` opt-in alone does not make `/hardlook` visible there.
+The standard command avoids relying on skill-backed slash autocomplete.
+See [historical TUI acceptance](compatibility.md#opencode-1190-slash-autocomplete) for the older V1 observation, not a current-generation menu verification.
 
 Use the bundled helper to install a standard global command:
 
@@ -57,15 +56,15 @@ findings. No extra CLI or model process is required for this baseline.
 
 ## Explicit CLI reviewers
 
-The OpenCode adapter targets only the latest stable V1 and V2 releases (verified at 1.19.5 and 2.2.5).
-The helper probes `opencode --version` and selects the native overlay without rewriting user configuration.
-V2 launches with `--standalone` so its private server receives that overlay.
-The same `--peer opencode:<model>` interface works for both, including V2 `#variant` suffixes.
+See the [bundled OpenCode adapter instructions](../../skills/hardlook/adapters/opencode/instructions.md) for supported generations, version probing, native overlays, scheduling, and permission limitations.
+The same `--peer opencode:<model>` interface works for both OpenCode generations, including V2 `#variant` suffixes.
 Choose a retained executable with `--binary opencode=/absolute/path/to/opencode` when the command on PATH is not the desired generation.
 Both generations normally install as `opencode`; this task does not install or replace either globally.
 Unknown major versions, unrecognized version output, and prereleases fail closed.
 No runtime release lookup, old-release fallback, or automatic model substitution occurs.
-Peer and lead results record `harness_generation` and `harness_version` without claiming a served-model identity.
+Successful OpenCode peer and lead results record `harness_generation` and `harness_version` without claiming a served-model identity.
+For OpenCode, `doctor` reports the recognized `generation` and `version`, or `available: false` with `unsupported-cli-version` for rejected version output.
+It does not check model access or look up the latest release.
 
 Examples below assume `<skill>` is the installed directory. Use actual available
 models from your harness; example aliases are not a model-availability promise.

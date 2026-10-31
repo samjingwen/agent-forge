@@ -55,6 +55,8 @@ Use a real `provider/model` selector when choosing a model. Deep panels launch
 fresh CLI sessions and load bundled prompts directly, so no separately
 installed reviewer agent is required. The packet identifies the reviewed
 revision; a change during the run invalidates the result.
+Within one review, OpenCode peer sessions run serially to avoid contention while initializing shared native state; they remain independent sessions on the same packet.
+Other harnesses remain concurrent, and the lead starts only after all requested peers succeed.
 
 V1 references: https://opencode.ai/docs/cli/, https://opencode.ai/docs/agents/, https://opencode.ai/docs/permissions/.
 V2 references: https://opencode.ai/v2/docs/cli/commands, https://opencode.ai/v2/docs/agents, https://opencode.ai/v2/docs/permissions, https://opencode.ai/v2/docs/migrate-v1.

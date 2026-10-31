@@ -36,7 +36,7 @@ Then use `/hardlook`, `/hardlook deep`, or `/hardlook structure`.
 V2 reloads configuration automatically; use `/reload` when needed.
 For V1, use a fresh session or restart the client after installation.
 The standard command avoids relying on skill-backed slash autocomplete.
-See the [bundled OpenCode instructions](../../skills/hardlook/adapters/opencode/instructions.md) for project-local setup and the `/skills` picker.
+See the [bundled OpenCode instructions](../../skills/hardlook/adapters/opencode/instructions.md) for project-local setup and plain-text invocation.
 
 Hardlook reviews and recommends. Your agent or existing pipeline owns fixes.
 

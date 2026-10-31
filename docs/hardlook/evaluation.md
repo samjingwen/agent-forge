@@ -41,7 +41,7 @@ The provider drives an allowed literal `calc.js` read, a forbidden literal `cred
 The check validates actual CLI acceptance, effective tool exposure, those specific literal-read/skill denials, version/generation recording, report normalization, and source non-mutation without accessing live provider credentials.
 The caller runs in a different directory with a stale `PWD`; the allowed read must still return the reviewed repository's content.
 Before the routine check, it runs three deep reviews with two native peers and a separate lead, beginning with a cold shared home.
-Hardlook serializes OpenCode peer sessions within each review to avoid native shared-state startup contention; other harnesses remain concurrent.
+See the [adapter instructions](../../skills/hardlook/adapters/opencode/instructions.md) for reviewer scheduling.
 Read-permission masks do not comprehensively filter native grep results or canonical/symlink targets in either generation, and this check does not claim otherwise.
 It makes no live LLM calls and does not establish review accuracy.
 No binary is installed, upgraded, or downloaded by this evaluator; supply the executables separately.
