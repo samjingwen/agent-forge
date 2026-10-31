@@ -2,6 +2,6 @@
 description: Review code with Hardlook (routine, deep, or structure)
 ---
 
-Call skill({ name: "hardlook" }) and follow its installed review protocol.
+Load the installed "hardlook" skill with your host's skill tool and follow its review protocol.
 
 Review request: $ARGUMENTS

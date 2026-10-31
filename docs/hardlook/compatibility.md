@@ -11,16 +11,27 @@ Three different claims are kept separate:
 
 | Harness | Bundled adapter | Protocol fixture tests | Native evidence |
 | --- | --- | --- | --- |
-| OpenCode | Yes | Automated | 1.18.35: validated review reports; 1.19.0: standard-command registration and TUI menu acceptance |
+| OpenCode V1 (latest only) | Yes | Automated | 1.19.5: actual CLI against a loopback model, allowed literal read, literal credentials-fixture.json read denial, validated relocated-bundle report |
+| OpenCode V2 (latest only) | Yes | Automated | 2.2.5: actual CLI/private server against a loopback model, allowed literal read, literal credentials-fixture.json read and synthetic skill denial, validated relocated-bundle report |
 | Claude Code | Yes | Automated | 2.0.76: invocation attempted; harness reports credential rejection |
 | Codex | Yes | Automated | CLI absent on the development machine |
 | Cursor | Yes | Automated | CLI absent on the development machine |
 | Pi | Yes | Automated | CLI absent on the development machine |
 
-The recorded model-review runs used OpenCode 1.18.35 and Claude Code 2.0.76.
+The historical model-review runs used OpenCode 1.18.35 and Claude Code 2.0.76; these are not new support promises for old OpenCode releases.
 Missing CLIs are an availability limit, not evidence of failed authentication.
 Each adapter documents its source interface and model/permission assumptions.
 New CLI versions must be exercised before extending native claims.
+
+On 31 October 2026, the latest stable releases were checked through `opencode-ai@latest` (V1 1.19.5) and `@opencode/cli@latest` (V2 2.2.5).
+`evals/hardlook/opencode-native.mjs` exercised both real executables through an installed and relocated Hardlook bundle, with isolated homes and a deterministic loopback provider rather than live model credentials.
+The test drove a real allowed literal read and a forbidden literal `credentials-fixture.json` read, asserted no source mutations, and verified report normalization and recorded CLI generation/version.
+V2 advertises a skill tool even with denied skill permission; the attempted synthetic skill load was denied.
+No shell, mutation, delegation, network, Code Mode, or MCP tool was advertised to the loopback model.
+These are native invocation and permission checks, not evidence of real model judgment or renewed TUI autocomplete acceptance.
+Neither generation's read masks comprehensively filter native grep results or canonical/symlink targets; the native check does not establish those protections or denial of every packet-excluded path.
+Packet private-path exclusions and reviewer instructions not to access private material remain intact, but cannot eliminate these host limitations.
+The adapter probes only the local executable, rejects unknown majors/prereleases, and does not fetch release metadata or maintain old-release shims during review.
 
 The 0.2.0 reproduction-evidence contract is covered by deterministic native-shaped fixtures, including installed relocation and deep synthesis failure handling.
 The Codex fixture consumes the generated `--output-schema` file and checks the strict contract that every object is closed and every property required, including nested reproduction fields.
