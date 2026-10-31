@@ -13,13 +13,7 @@ export function validateStrictSchema(rule) {
 
 export function validateSchemaValue(value, rule) {
   const type =
-    value === null
-      ? 'null'
-      : Array.isArray(value)
-        ? 'array'
-        : Number.isInteger(value)
-          ? 'integer'
-          : typeof value;
+    value === null ? 'null' : Array.isArray(value) ? 'array' : Number.isInteger(value) ? 'integer' : typeof value;
   assert.ok((Array.isArray(rule.type) ? rule.type : [rule.type]).includes(type));
   if (rule.enum) assert.ok(rule.enum.includes(value));
   if (type === 'string') assert.ok(value.length >= (rule.minLength ?? 0));

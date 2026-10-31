@@ -12,9 +12,7 @@ if (args.includes('--version')) {
   process.exit(0);
 }
 const outputSchema =
-  harness === 'codex'
-    ? JSON.parse(fs.readFileSync(args[args.indexOf('--output-schema') + 1], 'utf8'))
-    : null;
+  harness === 'codex' ? JSON.parse(fs.readFileSync(args[args.indexOf('--output-schema') + 1], 'utf8')) : null;
 if (outputSchema) validateStrictSchema(outputSchema);
 let input = '';
 for await (const chunk of process.stdin) input += chunk;
