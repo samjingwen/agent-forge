@@ -15,7 +15,9 @@ export function selector(text) {
   const harness = split < 0 ? text : text.slice(0, split);
   const model = split < 0 ? null : text.slice(split + 1);
   if (!Object.hasOwn(binaries, harness)) throw new Error('unknown harness');
-  if (model !== null && !/^[a-zA-Z0-9][a-zA-Z0-9._:/@+#-]*$/.test(model)) throw new Error('invalid model selector');
+  const modelPattern =
+    harness === 'opencode' ? /^[a-zA-Z0-9][a-zA-Z0-9._:/@+#-]*$/ : /^[a-zA-Z0-9][a-zA-Z0-9._:/@+-]*$/;
+  if (model !== null && !modelPattern.test(model)) throw new Error('invalid model selector');
   return { harness, model };
 }
 

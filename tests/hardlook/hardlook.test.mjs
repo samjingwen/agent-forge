@@ -292,6 +292,67 @@ test('OpenCode V2 variant selectors reach the CLI unchanged', async (t) => {
   assert.equal(result.peers[0].requested_model, 'valid#high');
 });
 
+for (const version of ['1.19.5', '2.2.5'])
+  test(`OpenCode ${version} peers and leads read the reviewed repo across directories`, async (t) => {
+    const f = await fixture(t);
+    const caller = await fixture(t);
+    const traces = path.join(f.dir, 'trace');
+    await fs.mkdir(traces);
+    await fs.writeFile(path.join(f.dir, 'opencode-version.txt'), version);
+    await fs.writeFile(path.join(f.repo, 'supporting.txt'), 'Reviewed repository evidence.');
+    await fs.writeFile(path.join(caller.repo, 'supporting.txt'), 'Wrong caller repository evidence.');
+    const result = await execute(
+      process.execPath,
+      [
+        cli,
+        'review',
+        '--repo',
+        f.repo,
+        '--base',
+        'main',
+        '--intent',
+        'Change calculation.',
+        '--mode',
+        'deep',
+        '--peer',
+        'opencode:supporting-read',
+        '--peer',
+        'codex:valid',
+        '--binary',
+        `opencode=${f.binaries.opencode}`,
+        '--binary',
+        `codex=${f.binaries.codex}`,
+      ],
+      { cwd: caller.repo, env: { ...process.env, PWD: caller.repo, HARDLOOK_TEST_TRACE: traces } },
+    );
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.status, 'complete');
+    assert.equal(output.peers[0].report.summary, 'Reviewed repository evidence.');
+    assert.equal(output.report.summary, 'Reviewed repository evidence.');
+    const calls = await Promise.all(
+      (await fs.readdir(traces)).map(async (file) => JSON.parse(await fs.readFile(path.join(traces, file), 'utf8'))),
+    );
+    const opencodeCalls = calls.filter((call) => call.harness === 'opencode');
+    assert.equal(opencodeCalls.length, 2);
+    assert.equal(opencodeCalls.filter((call) => call.lead).length, 1);
+    const reviewedRepo = await fs.realpath(f.repo);
+    for (const call of opencodeCalls) {
+      assert.equal(call.cwd, reviewedRepo);
+      assert.equal(call.pwd, reviewedRepo);
+    }
+  });
+
+for (const host of hosts.filter((host) => host !== 'opencode'))
+  test(`${host} rejects OpenCode-only variant syntax before invocation`, async (t) => {
+    const f = await fixture(t);
+    const options = { ...f.options, binaryOverrides: { [host]: path.join(f.dir, 'missing-harness') } };
+    await assert.rejects(review({ ...options, peers: [`${host}:valid#high`] }), /invalid model selector/);
+    await assert.rejects(
+      review({ ...options, mode: 'deep', peers: ['opencode:valid', 'codex:valid'], lead: `${host}:valid#high` }),
+      /invalid model selector/,
+    );
+  });
+
 for (const version of ['3.0.0', 'not-a-version', '2.2.5-beta.1'])
   test(`OpenCode version ${version} fails closed without a model invocation`, async (t) => {
     const f = await fixture(t);

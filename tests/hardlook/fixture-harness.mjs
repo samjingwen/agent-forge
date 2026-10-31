@@ -25,6 +25,7 @@ if (harness === 'opencode') {
   const generation = Number(version.match(/\d+/)[0]);
   fs.appendFileSync(path.join(path.dirname(process.argv[1]), 'opencode-invocations'), 'run\n');
   checkOpenCodeContract(JSON.parse(process.env.OPENCODE_CONFIG_CONTENT), args, generation);
+  if (generation === 2 && process.env.PWD) process.chdir(process.env.PWD);
 }
 const outputSchema =
   harness === 'codex' ? JSON.parse(fs.readFileSync(args[args.indexOf('--output-schema') + 1], 'utf8')) : null;
@@ -46,6 +47,8 @@ if (process.env.HARDLOOK_TEST_TRACE)
       context: createHash('sha256').update(JSON.stringify(packet)).digest('hex'),
       lead: input.includes('INDEPENDENT_REPORTS'),
       pid: process.pid,
+      cwd: process.cwd(),
+      pwd: process.env.PWD,
     }),
   );
 if (model === 'timeout') await new Promise((resolve) => setTimeout(resolve, 60_000));
@@ -77,6 +80,7 @@ const report = {
   findings: [],
 };
 if (model === 'valid#high') report.summary = 'Variant selector arrived unchanged.';
+if (model === 'supporting-read') report.summary = fs.readFileSync('supporting.txt', 'utf8');
 if (model === 'finding' || model === 'null-reproduction' || model.startsWith('repro-'))
   report.findings.push({
     file: packet.changed_paths[0],

@@ -42,7 +42,9 @@ The packet pins scope, base, HEAD, intended behavior, selected source, and proje
 rules. Bounded capture fails instead of silently truncating. A hash binds the
 packet and checkout status; changing that context invalidates the review result.
 This detects relevant drift, not every possible mutation of an excluded private
-or ignored file. Native read/search restrictions remain the first boundary.
+or ignored file.
+OpenCode's native permissions restrict tools and mask some literal private read paths, but do not comprehensively filter grep results or canonical/symlink targets.
+Packet exclusions and reviewer instructions not to access private material remain necessary; native masks are not a comprehensive private-content authorization boundary.
 
 Each reviewer records its examined changed paths. The lead synthesizes only
 successful independent reports. Missing peers, invalid reports, missing

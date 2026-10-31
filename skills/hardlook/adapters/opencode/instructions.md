@@ -33,7 +33,11 @@ The helper probes the selected binary with `--version` and chooses a generation-
 | V2 | `config-v2.json`: `agents`, `system`, ordered permissions | `opencode run --standalone --format json --agent hardlook-peer` |
 
 V2 requires a private server so the invocation's overlay reaches the reviewer instead of being lost against an existing shared service.
-Both overlays deny mutations, shell, delegation, skill loading, network, Code Mode, and MCP actions, while allowing local read/search operations with private-read exclusions.
+Both overlays deny mutations, shell, delegation, skill loading, network, Code Mode, and MCP actions, while allowing local read/search operations with best-effort literal private-path read masks.
+In both generations, read-permission masks do not comprehensively filter native grep results or canonical/symlink read targets, and the literal masks do not cover every path excluded from the packet.
+These host limitations remain: the overlays are not a comprehensive private-content authorization boundary.
+Packet private-path exclusions remain enforced, and reviewers must not access private environment files, keys, tokens, or authentication caches through any tool or alias.
+Native acceptance exercises an allowed literal read and denial of a literal `credentials-fixture.json` read; it does not prove search-result or canonical-target filtering.
 V2 may advertise its skill tool even when skill permission is denied; native acceptance verifies the attempted load is rejected.
 These are host tool permissions, not an OS sandbox for plugins or extensions.
 The helper does not edit global configuration, register persistent agents, restart a service, or replace plugins.

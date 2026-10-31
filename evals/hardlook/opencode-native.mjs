@@ -105,11 +105,15 @@ try {
     const dir = path.join(temporary, `v${generation}`);
     const home = path.join(dir, 'home');
     const repo = path.join(dir, 'repo');
+    const caller = path.join(dir, 'caller');
     const configDir = path.join(home, '.config/opencode');
     await fs.mkdir(repo, { recursive: true });
+    await fs.mkdir(caller);
+    await fs.writeFile(path.join(caller, 'calc.js'), 'Wrong caller repository content.\n');
     await fs.mkdir(configDir, { recursive: true });
     const env = {
       PATH: process.env.PATH,
+      PWD: caller,
       HOME: home,
       TMPDIR: temporary,
       XDG_CONFIG_HOME: path.join(home, '.config'),
@@ -190,7 +194,7 @@ try {
         '--timeout-ms',
         '60000',
       ],
-      { cwd: repo, env, allowFailure: true, timeoutMs: 70000 },
+      { cwd: caller, env, allowFailure: true, timeoutMs: 70000 },
     );
     const output = result.stdout ? JSON.parse(result.stdout) : null;
     observations.push({
