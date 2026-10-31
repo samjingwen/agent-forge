@@ -35,6 +35,13 @@ for await (const chunk of process.stdin) input += chunk;
 if (harness === 'cursor') input = args.at(-1);
 const modelIndex = Math.max(args.indexOf('--model'), args.indexOf('-m'));
 const model = modelIndex < 0 ? 'valid' : args[modelIndex + 1];
+// Emulate the native shared-state lock, not the runner's scheduling implementation.
+let stateLock;
+if (model.startsWith('shared-state-')) {
+  stateLock = path.join(path.dirname(process.argv[1]), 'native-state.lock');
+  fs.closeSync(fs.openSync(stateLock, 'wx'));
+  await new Promise((resolve) => setTimeout(resolve, 200));
+}
 const start = input.indexOf('REVIEW_PACKET\n') + 'REVIEW_PACKET\n'.length;
 const end = input.indexOf('\nEND_REVIEW_PACKET', start);
 const packet = JSON.parse(input.slice(start, end));
@@ -126,6 +133,7 @@ if (outputSchema) {
   }
   validateSchemaValue(report, outputSchema);
 }
+if (stateLock) fs.unlinkSync(stateLock);
 if (harness === 'opencode') console.log(JSON.stringify({ type: 'text', part: { text: JSON.stringify(report) } }));
 else if (harness === 'claude-code') console.log(JSON.stringify({ type: 'result', structured_output: report }));
 else if (harness === 'codex')

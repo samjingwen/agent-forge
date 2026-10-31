@@ -284,6 +284,25 @@ for (const [version, generation] of [
     assert.equal(entry.available, true);
   });
 
+for (const version of ['1.19.5', '2.2.5'])
+  test(`OpenCode ${version} deep peers avoid shared-state contention`, async (t) => {
+    const f = await fixture(t);
+    await fs.writeFile(path.join(f.dir, 'opencode-version.txt'), version);
+    // Native startup's exclusive state access must not prevent independent deep sessions.
+    // An overlapping launch fails at the executable boundary instead of returning a report.
+    const result = await review({
+      ...f.options,
+      mode: 'deep',
+      peers: ['opencode:shared-state-one', 'opencode:shared-state-two'],
+      lead: 'opencode:shared-state-lead',
+    });
+    assert.equal(result.status, 'complete');
+    assert.deepEqual(result.peers.map((peer) => peer.status), ['ok', 'ok']);
+    assert.equal(result.lead.requested_model, 'shared-state-lead');
+    assert.deepEqual(result.report.reviewed_paths, ['calc.js']);
+    assert.equal((await f.git('status', '--porcelain')).stdout, '');
+  });
+
 test('OpenCode V2 variant selectors reach the CLI unchanged', async (t) => {
   const f = await fixture(t);
   const result = await review({ ...f.options, peers: ['opencode:valid#high'] });

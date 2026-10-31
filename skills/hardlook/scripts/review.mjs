@@ -71,20 +71,29 @@ export async function review(options) {
       maxOutputBytes: 4 * 1024 * 1024,
     };
     const prompt = await promptFor(context, mode);
+    // Native OpenCode processes share startup databases, including on cold homes.
+    // Keep their sessions independent but avoid racing native state initialization.
+    let opencodePending = Promise.resolve();
     const results = await Promise.all(
-      peers.map(async (peer) => {
-        try {
-          return { ...(await runPeer(peer, { ...common, prompt })), status: 'ok' };
-        } catch (error) {
-          return {
-            harness: peer.harness,
-            requested_model: peer.model,
-            status: 'failed',
-            reason: error.kind ?? 'invalid-report',
-            exit_code: error.code ?? null,
-            diagnosis: error.diagnosis ?? null,
-          };
-        }
+      peers.map((peer) => {
+        const run = async () => {
+          try {
+            return { ...(await runPeer(peer, { ...common, prompt })), status: 'ok' };
+          } catch (error) {
+            return {
+              harness: peer.harness,
+              requested_model: peer.model,
+              status: 'failed',
+              reason: error.kind ?? 'invalid-report',
+              exit_code: error.code ?? null,
+              diagnosis: error.diagnosis ?? null,
+            };
+          }
+        };
+        if (peer.harness !== 'opencode') return run();
+        const result = opencodePending.then(run);
+        opencodePending = result;
+        return result;
       }),
     );
     let report = mode === 'deep' ? null : (results[0].report ?? null);

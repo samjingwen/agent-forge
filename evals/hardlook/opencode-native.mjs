@@ -22,6 +22,7 @@ const report = {
 const requests = [];
 let generationUnderTest;
 let phase = 0;
+let deep = false;
 const privateMarker = 'NATIVE_FIXTURE_PRIVATE_CONTENT';
 const skillMarker = 'NATIVE_FIXTURE_SKILL_CONTENT';
 const server = http.createServer(async (req, res) => {
@@ -55,7 +56,7 @@ const server = http.createServer(async (req, res) => {
     choices: [{ index: 0, delta: { role: 'assistant', content: JSON.stringify(report) }, finish_reason: null }],
   };
   let call;
-  if (tools.includes('read')) {
+  if (!deep && tools.includes('read')) {
     if (phase < 2)
       call = {
         name: 'read',
@@ -156,6 +157,10 @@ try {
               },
             },
           };
+    const models =
+      generation === 1 ? provider.provider['local-fixture'].models : provider.providers['local-fixture'].models;
+    models.peer = structuredClone(models.fixture);
+    models.lead = structuredClone(models.fixture);
     await fs.writeFile(path.join(configDir, 'opencode.json'), JSON.stringify(provider));
     const git = (...args) => execute('git', args, { cwd: repo, env });
     await git('init', '-b', 'main');
@@ -175,6 +180,60 @@ try {
     );
     await fs.writeFile(path.join(repo, '.git/info/exclude'), 'credentials-fixture.json\n.opencode/\n');
     const version = await execute(binary, ['--version'], { env });
+    // A cold shared home reproduces native startup contention between independent peers.
+    // The oracle is the public deep-review contract: two peer reports, then a separate lead.
+    deep = true;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const firstDeep = requests.length;
+      const result = await execute(
+        process.execPath,
+        [
+          installedCLI,
+          'review',
+          '--repo',
+          repo,
+          '--base',
+          'main',
+          '--intent',
+          'Preserve the calculation.',
+          '--mode',
+          'deep',
+          '--peer',
+          'opencode:local-fixture/fixture',
+          '--peer',
+          'opencode:local-fixture/peer',
+          '--lead',
+          'opencode:local-fixture/lead',
+          '--binary',
+          `opencode=${path.resolve(binary)}`,
+          '--timeout-ms',
+          '60000',
+        ],
+        { cwd: caller, env, allowFailure: true, timeoutMs: 200000 },
+      );
+      const output = result.stdout ? JSON.parse(result.stdout) : null;
+      observations.push({
+        generation,
+        attempt,
+        mode: 'deep',
+        exit_code: result.code,
+        output,
+        requests: requests.slice(firstDeep),
+      });
+      assert.equal(result.code, 0, JSON.stringify(observations.at(-1)));
+      assert.equal(output.status, 'complete');
+      assert.equal(output.peers.length, 2);
+      assert.ok(output.peers.every((peer) => peer.status === 'ok'));
+      assert.equal(output.lead.requested_model, 'local-fixture/lead');
+      assert.deepEqual(
+        requests.slice(firstDeep).filter((request) => request.tools.length).map((request) => request.model).sort(),
+        ['fixture', 'lead', 'peer'],
+      );
+      assert.equal(requests.at(-1).model, 'lead');
+      assert.deepEqual(output.report, report);
+      assert.equal((await git('status', '--porcelain')).stdout, '');
+    }
+    deep = false;
     const first = requests.length;
     const result = await execute(
       process.execPath,
