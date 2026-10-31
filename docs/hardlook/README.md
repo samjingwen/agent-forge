@@ -18,7 +18,8 @@ Choose your harness in the installer, then start a new session and ask:
 Hardlook's canonical source is [`skills/hardlook/`](../../skills/hardlook/).
 It was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook); use Agent Forge for future installations and updates.
 
-Version 0.2.0 adds optional reproduction-evidence reporting while preserving read-only review and actionable static findings.
+Version 0.3.0 supports the latest OpenCode V1 and V2 releases with generation-specific launch and permission handling.
+It retains 0.2.0's optional reproduction-evidence reporting, read-only review, and actionable static findings.
 See the [upstream comparison and adaptation notes](upstream-refresh.md) and [evidence contract](usage.md#reproduction-evidence).
 
 ## OpenCode slash menu
@@ -31,8 +32,10 @@ node "$HOME/.agents/skills/hardlook/scripts/hardlook.mjs" install-opencode-comma
   --dest "$HOME/.config/opencode/commands/hardlook.md"
 ```
 
-Then quit and restart OpenCode and use `/hardlook`, `/hardlook deep`, or `/hardlook structure`.
-OpenCode 1.19.0 hides skill-backed entries in slash autocomplete; the standard command provides menu visibility.
+Then use `/hardlook`, `/hardlook deep`, or `/hardlook structure`.
+V2 reloads configuration automatically; use `/reload` when needed.
+For V1, use a fresh session or restart the client after installation.
+The standard command avoids relying on skill-backed slash autocomplete.
 See the [bundled OpenCode instructions](../../skills/hardlook/adapters/opencode/instructions.md) for project-local setup and the `/skills` picker.
 
 Hardlook reviews and recommends. Your agent or existing pipeline owns fixes.

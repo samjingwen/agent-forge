@@ -1,6 +1,6 @@
 {
   "name": "hardlook",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "entrypoint": "SKILL.md",
   "distribution": "self-contained-agent-skill",
   "modes": ["routine", "deep", "structure"],

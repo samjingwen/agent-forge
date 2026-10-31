@@ -53,6 +53,11 @@ The helper never invents served-model identity from the requested selector.
 Model availability, authentication, and reasoning behavior are host concerns.
 No fallback converts a failed explicit peer into a successful diversity claim.
 
+OpenCode's single selector supports the latest stable V1 and V2 lines through local version probing and separate native configuration overlays.
+V2 uses a private standalone server so per-invocation permissions do not depend on the environment of an already running shared service.
+The adapter records CLI version/generation but does not infer model identity or promise older-release compatibility.
+Unknown majors, prereleases, and unrecognized version output fail closed without launching a model request.
+
 ## Process ownership
 
 Review processes have wall-clock and output-size bounds. POSIX process groups

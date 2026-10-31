@@ -1,10 +1,9 @@
-# OpenCode
+# OpenCode V1 and V2
 
-Install this complete skill into `.opencode/skills/hardlook/` or a configured
-user skill directory. OpenCode 1.19.0's TUI excludes commands whose source is
-`skill` from slash autocomplete, even when the skill has
-`metadata.opencode/slash: "true"`. Backend registration alone does not establish
-menu visibility; restarting does not change that filter.
+Target the latest stable release of each line only: V1 1.19.5 and V2 2.2.5 were verified on 31 October 2026.
+Older releases, prereleases, and other major versions are not compatibility targets.
+Install the complete skill into `.opencode/skills/hardlook/` or a configured user skill directory.
+V1 and V2 use the same command and configuration locations; do not replace global installations or migrate the user's configuration merely to review code.
 
 Install the bundled standard command to make `/hardlook` visible. For a global
 skill installed under `~/.agents/skills/hardlook/`:
@@ -20,22 +19,38 @@ and forwards the request, including `deep` or `structure`. It uses the current
 agent and model. Identical command installations are idempotent; different
 existing files and symlinks are refused without modification.
 
-Quit and restart OpenCode after installation or updates to reload its catalog.
-Invoke `/hardlook`, `/hardlook deep`, or `/hardlook structure`. `/skills` also
-provides a skill picker, and plain-text Hardlook requests work without installing
-the menu command.
+V2 watches configuration, skills, and commands; use `/reload` to force a refresh without restarting its service.
+For V1, start a fresh session or restart its client after installation or updates.
+Invoke `/hardlook`, `/hardlook deep`, or `/hardlook structure`.
+Plain-text Hardlook requests also work without installing the menu command.
+The standard command avoids reliance on skill-backed slash autocomplete, which older V1 TUI acceptance documented separately.
 
-The bundled CLI uses `opencode run --format json --agent hardlook-peer` with
-an invocation-local `OPENCODE_CONFIG_CONTENT` overlay from `config.json`.
-It does not edit the user's config, create persistent agents, or overwrite
-plugins. The overlay disables edits, shell, delegation, and MCP tools and
-allows only read/search tools. Existing provider setup supplies credentials.
+The helper probes the selected binary with `--version` and chooses a generation-specific invocation-local `OPENCODE_CONFIG_CONTENT` overlay:
+
+| Generation | Config | Launch |
+| --- | --- | --- |
+| V1 | `config.json`: `agent`, `prompt`, permission map | `opencode run --format json --agent hardlook-peer` |
+| V2 | `config-v2.json`: `agents`, `system`, ordered permissions | `opencode run --standalone --format json --agent hardlook-peer` |
+
+V2 requires a private server so the invocation's overlay reaches the reviewer instead of being lost against an existing shared service.
+Both overlays deny mutations, shell, delegation, skill loading, network, Code Mode, and MCP actions, while allowing local read/search operations with private-read exclusions.
+V2 may advertise its skill tool even when skill permission is denied; native acceptance verifies the attempted load is rejected.
 These are host tool permissions, not an OS sandbox for plugins or extensions.
+The helper does not edit global configuration, register persistent agents, restart a service, or replace plugins.
+Existing host provider setup supplies credentials without Hardlook reading credential caches.
+
+Keep using `--peer opencode:<provider/model>` for either line.
+Use `--binary opencode=/absolute/path/to/opencode` to select a separately retained V1 or V2 executable.
+Do not assume both generations are installed side by side; both normally own the `opencode` command.
+V2 `provider/model#variant` selectors are passed unchanged.
+The selected generation and CLI version are recorded separately from the requested model; served model identity is not inferred.
+Unknown versions and prereleases fail closed without a model request or automatic generation/model fallback.
+Version probing does not fetch release metadata or promise compatibility with every older patch in a major line.
 
 Use a real `provider/model` selector when choosing a model. Deep panels launch
 fresh CLI sessions and load bundled prompts directly, so no separately
 installed reviewer agent is required. The packet identifies the reviewed
 revision; a change during the run invalidates the result.
 
-Reference: https://opencode.ai/docs/skills/, https://opencode.ai/docs/agents/,
-and https://opencode.ai/config.json
+V1 references: https://opencode.ai/docs/cli/, https://opencode.ai/docs/agents/, https://opencode.ai/docs/permissions/.
+V2 references: https://opencode.ai/v2/docs/cli/commands, https://opencode.ai/v2/docs/agents, https://opencode.ai/v2/docs/permissions, https://opencode.ai/v2/docs/migrate-v1.

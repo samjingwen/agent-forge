@@ -69,6 +69,11 @@ review using its own read/search tools and the bundled protocol.
 Run `... --help` for exact flags. Missing CLIs or credentials require the user
 to install/authenticate their harness. Never retrieve or print credentials.
 
+OpenCode targets the latest stable V1 and V2 releases only.
+The helper probes the selected executable, uses the generation's native permission overlay, and isolates V2 with `--standalone`.
+Keep `--peer opencode:<model>`; select a retained binary with `--binary opencode=<path>`.
+Read `adapters/opencode/instructions.md` for generation-specific setup and reload behavior.
+
 ## Inside no-mistakes
 
 Read `adapters/no-mistakes/instructions.md`. Apply the review method directly

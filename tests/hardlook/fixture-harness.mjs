@@ -4,12 +4,27 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { validateStrictSchema, validateSchemaValue } from './strict-schema.mjs';
+import { checkOpenCodeContract } from './opencode-contract.mjs';
 
 const harness = path.basename(process.argv[1]);
 const args = process.argv.slice(2);
 if (args.includes('--version')) {
-  console.log('fixture 1.2.3');
+  const versionPath = path.join(path.dirname(process.argv[1]), 'opencode-version.txt');
+  console.log(
+    harness === 'opencode'
+      ? fs.existsSync(versionPath)
+        ? fs.readFileSync(versionPath, 'utf8')
+        : '2.2.5'
+      : 'fixture 1.2.3',
+  );
   process.exit(0);
+}
+if (harness === 'opencode') {
+  const versionPath = path.join(path.dirname(process.argv[1]), 'opencode-version.txt');
+  const version = fs.existsSync(versionPath) ? fs.readFileSync(versionPath, 'utf8') : '2.2.5';
+  const generation = Number(version.match(/\d+/)[0]);
+  fs.appendFileSync(path.join(path.dirname(process.argv[1]), 'opencode-invocations'), 'run\n');
+  checkOpenCodeContract(JSON.parse(process.env.OPENCODE_CONFIG_CONTENT), args, generation);
 }
 const outputSchema =
   harness === 'codex' ? JSON.parse(fs.readFileSync(args[args.indexOf('--output-schema') + 1], 'utf8')) : null;
@@ -61,6 +76,7 @@ const report = {
   reviewed_paths: model === 'partial' ? [] : packet.changed_paths,
   findings: [],
 };
+if (model === 'valid#high') report.summary = 'Variant selector arrived unchanged.';
 if (model === 'finding' || model === 'null-reproduction' || model.startsWith('repro-'))
   report.findings.push({
     file: packet.changed_paths[0],

@@ -20,8 +20,9 @@ node skills/hardlook/scripts/hardlook.mjs install --dest /absolute/path/to/skill
 
 The destination must not exist. Existing user work is never overwritten.
 Upgrade by selecting a new versioned destination, then switch the host's skill
-path using its normal configuration. Restart the harness after skill changes;
-running sessions may retain their original skill catalog.
+path using its normal configuration.
+Refresh the harness after skill changes; V2 watches configuration and supports `/reload`, while other hosts may need a new session or restart.
+Installer JSON returns `refresh_harness: true` rather than prescribing a restart for every host.
 
 The package can be moved. All helper imports and prompt/schema lookups resolve
 relative to the installed bundle. Node standard libraries supply the helpers;
@@ -44,8 +45,9 @@ For project-local scope, use `--dest .opencode/commands/hardlook.md`. The file
 must be named `hardlook.md`. It invokes the installed skill with the supplied
 arguments and retains the current agent and model. Reinstalling the same command
 is a no-op; a different existing command or symlink is preserved and reported as
-a conflict. Quit and restart OpenCode to load the command. `/skills` remains an
-alternative entrypoint for an installed skill.
+a conflict.
+V2 loads changes automatically and supports `/reload`; V1 may need a new session or client restart.
+Plain-text requests remain an alternative entrypoint for an installed skill.
 
 ## Routine review in the host
 
@@ -54,6 +56,16 @@ bundled protocol, inspects connected code with its own tools, and reports useful
 findings. No extra CLI or model process is required for this baseline.
 
 ## Explicit CLI reviewers
+
+The OpenCode adapter targets only the latest stable V1 and V2 releases (verified at 1.19.5 and 2.2.5).
+The helper probes `opencode --version` and selects the native overlay without rewriting user configuration.
+V2 launches with `--standalone` so its private server receives that overlay.
+The same `--peer opencode:<model>` interface works for both, including V2 `#variant` suffixes.
+Choose a retained executable with `--binary opencode=/absolute/path/to/opencode` when the command on PATH is not the desired generation.
+Both generations normally install as `opencode`; this task does not install or replace either globally.
+Unknown major versions, unrecognized version output, and prereleases fail closed.
+No runtime release lookup, old-release fallback, or automatic model substitution occurs.
+Peer and lead results record `harness_generation` and `harness_version` without claiming a served-model identity.
 
 Examples below assume `<skill>` is the installed directory. Use actual available
 models from your harness; example aliases are not a model-availability promise.

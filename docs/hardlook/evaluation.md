@@ -27,3 +27,18 @@ For evidence-rubric calibration, include execution-prohibited reviews under pres
 An appropriate response distinguishes source evidence from unrun checks and unverified output rather than inventing test receipts or suppressing valid static findings.
 Record served model identity only when observed, preserve failures, and compare quality against elapsed time and usage when the harness provides that evidence.
 Do not put live model calls in CI.
+
+## Latest OpenCode native acceptance
+
+Run this opt-in check against explicitly selected latest stable executables:
+
+```sh
+node evals/hardlook/opencode-native.mjs --v1-bin /absolute/v1/opencode --v2-bin /absolute/v2/opencode
+```
+
+It installs and relocates a complete bundle, creates disposable Git repositories and isolated host homes, and sends both real CLIs to a deterministic loopback OpenAI-compatible provider.
+The provider drives an allowed read and forbidden synthetic private-file/skill reads, then returns a fixed report.
+The check validates actual CLI acceptance, effective tool exposure, private-read denial, version/generation recording, report normalization, and source non-mutation without accessing live provider credentials.
+It makes no live LLM calls and does not establish review accuracy.
+No binary is installed, upgraded, or downloaded by this evaluator; supply the executables separately.
+Keep native acceptance opt-in rather than adding a runtime or CI dependency on two global CLI installations.

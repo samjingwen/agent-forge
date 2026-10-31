@@ -23,7 +23,7 @@ test('command installer emits the bundled OpenCode command and is idempotent', a
     installed: f.command,
     command: 'hardlook',
     source: 'command',
-    restart_harness: true,
+    refresh_harness: true,
     already_installed: false,
   });
   // The generated command file is the installer's public output contract.

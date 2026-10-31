@@ -10,6 +10,7 @@ Produce installable bundles from those sources.
 
 [Hardlook](docs/hardlook/README.md) is a self-contained, evidence-first code review skill for OpenCode, Cursor, Pi, Claude Code, and Codex.
 It supports routine review, independent deep review, and structural audits.
+OpenCode support targets the latest stable V1 and V2 releases only.
 
 ```sh
 npx skills add samjingwen/agent-forge --skill hardlook
@@ -121,6 +122,7 @@ They do not prove model-review accuracy or rewrite fidelity.
 
 `config:opencode` prints JSON with absolute paths to the canonical skills directory.
 The JSON also contains absolute paths to the OpenCode package directories it discovers one level under `plugins/opencode/`.
+This configuration output uses native V2 syntax; use the bundled Hardlook adapter instructions for V1 setup.
 Review the output.
 Merge the relevant settings into your OpenCode configuration.
 The command does not install plugins or change global settings.

@@ -38,6 +38,7 @@ async function fixture(t) {
   await git('commit', '-m', 'change');
   const binaries = {};
   await fs.copyFile(path.join(fixtures, 'strict-schema.mjs'), path.join(dir, 'strict-schema.mjs'));
+  await fs.copyFile(path.join(fixtures, 'opencode-contract.mjs'), path.join(dir, 'opencode-contract.mjs'));
   for (const host of hosts) {
     const bin = path.join(dir, host);
     await fs.copyFile(path.join(fixtures, 'fixture-harness.mjs'), bin);
@@ -259,6 +260,75 @@ test('deep mode runs independent sessions on identical packets followed by lead 
   assert.equal(new Set(calls.map((call) => call.context)).size, 1);
   assert.equal(new Set(calls.map((call) => call.pid)).size, 3);
 });
+
+for (const [version, generation] of [
+  ['1.19.5', 1],
+  ['opencode v2.2.5', 2],
+])
+  test(`latest OpenCode V${generation} uses its own launch and permission contract`, async (t) => {
+    const f = await fixture(t);
+    await fs.writeFile(path.join(f.dir, 'opencode-version.txt'), version);
+    const result = await review({ ...f.options, mode: 'deep', peers: ['opencode:repro-reported', 'codex:valid'] });
+    assert.equal(result.status, 'complete');
+    assert.equal(result.peers[0].harness_version, generation === 1 ? '1.19.5' : '2.2.5');
+    assert.equal(result.peers[0].harness_generation, generation);
+    assert.equal(result.lead.harness_generation, generation);
+    assert.equal(result.report.findings[0].reproduction.status, 'reported-unverified');
+    const doctor = await execute(process.execPath, [
+      cli,
+      'doctor',
+      ...Object.entries(f.binaries).flatMap(([host, binary]) => ['--binary', `${host}=${binary}`]),
+    ]);
+    const entry = JSON.parse(doctor.stdout).harnesses.find((item) => item.harness === 'opencode');
+    assert.equal(entry.generation, generation);
+    assert.equal(entry.available, true);
+  });
+
+test('OpenCode V2 variant selectors reach the CLI unchanged', async (t) => {
+  const f = await fixture(t);
+  const result = await review({ ...f.options, peers: ['opencode:valid#high'] });
+  assert.equal(result.status, 'complete');
+  assert.equal(result.report.summary, 'Variant selector arrived unchanged.');
+  assert.equal(result.peers[0].requested_model, 'valid#high');
+});
+
+for (const version of ['3.0.0', 'not-a-version', '2.2.5-beta.1'])
+  test(`OpenCode version ${version} fails closed without a model invocation`, async (t) => {
+    const f = await fixture(t);
+    await fs.writeFile(path.join(f.dir, 'opencode-version.txt'), version);
+    const result = await review({ ...f.options, peers: ['opencode:valid'] });
+    assert.equal(result.status, 'incomplete');
+    assert.equal(result.peers[0].reason, 'unsupported-cli-version');
+    await assert.rejects(fs.access(path.join(f.dir, 'opencode-invocations')));
+    assert.throws(() => pipelineReport(result));
+  });
+
+for (const version of ['1.19.5', '2.2.5'])
+  test(`relocated bundle supports latest OpenCode ${version}`, async (t) => {
+    const f = await fixture(t);
+    await fs.writeFile(path.join(f.dir, 'opencode-version.txt'), version);
+    const installed = path.join(f.dir, 'installed/hardlook');
+    await execute(process.execPath, [cli, 'install', '--dest', installed]);
+    const relocated = path.join(f.dir, 'relocated-hardlook');
+    await fs.rename(installed, relocated);
+    const result = await execute(process.execPath, [
+      path.join(relocated, 'scripts/hardlook.mjs'),
+      'review',
+      '--repo',
+      f.repo,
+      '--base',
+      'main',
+      '--intent',
+      'Review calculation.',
+      '--peer',
+      'opencode:valid',
+      '--binary',
+      `opencode=${f.binaries.opencode}`,
+    ]);
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.status, 'complete');
+    assert.equal(output.peers[0].harness_version, version);
+  });
 
 test('failed peer, partial coverage, invalid JSON, mutation, and duplicates cannot approve a panel', async (t) => {
   const f = await fixture(t);

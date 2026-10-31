@@ -51,7 +51,7 @@ export async function install(destination) {
   }
   await fs.mkdir(path.dirname(target), { recursive: true });
   await fs.cp(source, target, { recursive: true, errorOnExist: true, force: false, verbatimSymlinks: true });
-  return { installed: target, complete_bundle: true, restart_harness: true };
+  return { installed: target, complete_bundle: true, refresh_harness: true };
 }
 
 export async function installOpencodeCommand(destination) {
@@ -62,7 +62,7 @@ export async function installOpencodeCommand(destination) {
   if (target.startsWith(`${source}${path.sep}`))
     throw new Error('installation destination cannot be inside source bundle');
   const template = await fs.readFile(path.join(source, 'adapters/opencode/commands/hardlook.md'), 'utf8');
-  const result = { installed: target, command: 'hardlook', source: 'command', restart_harness: true };
+  const result = { installed: target, command: 'hardlook', source: 'command', refresh_harness: true };
   try {
     const existing = await fs.lstat(target);
     if (existing.isFile() && (await fs.readFile(target, 'utf8')) === template)
