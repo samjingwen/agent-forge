@@ -1,0 +1,22 @@
+✔ latest OpenCode V1 uses its own launch and permission contract (1821.381667ms)
+✔ latest OpenCode V2 uses its own launch and permission contract (1856.647958ms)
+✔ OpenCode V2 variant selectors reach the CLI unchanged (948.268583ms)
+✔ OpenCode 1.19.5 peers and leads read the reviewed repo across directories (1838.807541ms)
+✔ OpenCode 2.2.5 peers and leads read the reviewed repo across directories (1658.813625ms)
+✔ claude-code rejects OpenCode-only variant syntax before invocation (253.812084ms)
+✔ codex rejects OpenCode-only variant syntax before invocation (159.87375ms)
+✔ cursor rejects OpenCode-only variant syntax before invocation (174.416916ms)
+✔ pi rejects OpenCode-only variant syntax before invocation (178.58425ms)
+✔ OpenCode version 3.0.0 fails closed without a model invocation (784.053416ms)
+✔ OpenCode version not-a-version fails closed without a model invocation (815.832ms)
+✔ OpenCode version 2.2.5-beta.1 fails closed without a model invocation (817.793958ms)
+✔ relocated bundle supports latest OpenCode 1.19.5 (1187.69075ms)
+✔ relocated bundle supports latest OpenCode 2.2.5 (1181.26775ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 13852.923708

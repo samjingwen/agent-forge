@@ -1,0 +1,25 @@
+✔ private changed contents are excluded and explicit private includes are refused (1205.910833ms)
+✔ deep mode runs independent sessions on identical packets followed by lead synthesis (1235.123584ms)
+✔ failed peer, partial coverage, invalid JSON, mutation, and duplicates cannot approve a panel (3671.735458ms)
+✔ pipeline format preserves evidence, action, severity, risk scope, and coverage (748.39925ms)
+✔ CLI preserves not-run commands as data without executing them (1822.8105ms)
+✔ CLI preserves reported-unverified commands as data without executing them (1827.355334ms)
+✔ source-only findings remain actionable without a claimed reproduction (868.257208ms)
+✔ Codex strict transport handles valid for reviewers and deep leads (999.192ms)
+✔ deep synthesis retains an identical peer observation without upgrading it to confirmation (1170.582875ms)
+✔ deep synthesis refuses invented observation and cannot emit pipeline approval (1180.882208ms)
+✔ deep synthesis refuses altered observation and cannot emit pipeline approval (1176.766333ms)
+✔ deep synthesis refuses altered command and cannot emit pipeline approval (1197.677084ms)
+✔ deep synthesis refuses altered expectation and cannot emit pipeline approval (1190.699958ms)
+✔ deep synthesis refuses different file and cannot emit pipeline approval (1311.059708ms)
+✔ deep synthesis refuses combined peer fragments and cannot emit pipeline approval (1139.2685ms)
+✔ deep synthesis refuses unrun check promoted to observed and cannot emit pipeline approval (1112.295125ms)
+✔ installed, relocated fat bundle reviews without the source checkout and refuses overwrite (1253.786667ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 23251.371667

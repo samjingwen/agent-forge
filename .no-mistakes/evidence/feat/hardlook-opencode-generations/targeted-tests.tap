@@ -1,0 +1,33 @@
+✔ private changed contents are excluded and explicit private includes are refused (1521.919083ms)
+✔ known credential stores are excluded from capture and explicit includes (604.739375ms)
+✔ opencode: execute native-shaped CLI protocol and normalize a complete report (1032.54425ms)
+✔ deep mode runs independent sessions on identical packets followed by lead synthesis (1365.983959ms)
+✔ latest OpenCode V1 uses its own launch and permission contract (1763.136792ms)
+✔ latest OpenCode V2 uses its own launch and permission contract (1952.649375ms)
+✔ OpenCode 1.19.5 deep peers avoid shared-state contention (2271.496042ms)
+✔ OpenCode 2.2.5 deep peers avoid shared-state contention (2960.127584ms)
+✔ OpenCode V2 variant selectors reach the CLI unchanged (1341.597416ms)
+✔ OpenCode 1.19.5 peers and leads read the reviewed repo across directories (2097.53525ms)
+✔ OpenCode 2.2.5 peers and leads read the reviewed repo across directories (1986.436709ms)
+✔ claude-code rejects OpenCode-only variant syntax before invocation (195.838458ms)
+✔ codex rejects OpenCode-only variant syntax before invocation (294.239041ms)
+✔ cursor rejects OpenCode-only variant syntax before invocation (184.786084ms)
+✔ pi rejects OpenCode-only variant syntax before invocation (172.792417ms)
+✔ OpenCode version 3.0.0 fails closed without a model invocation (1004.831291ms)
+✔ OpenCode version not-a-version fails closed without a model invocation (985.220125ms)
+✔ OpenCode version 2.2.5-beta.1 fails closed without a model invocation (843.672375ms)
+✔ relocated bundle supports latest OpenCode 1.19.5 (1299.638709ms)
+✔ relocated bundle supports latest OpenCode 2.2.5 (1839.201625ms)
+✔ failed peer, partial coverage, invalid JSON, mutation, and duplicates cannot approve a panel (4511.151166ms)
+✔ pipeline format preserves evidence, action, severity, risk scope, and coverage (1176.277042ms)
+✔ opencode: reported reproduction stays explicitly unverified in report and pipeline output (1463.977542ms)
+✔ opencode: null reproduction is normalized only for Codex transport (1284.9755ms)
+✔ installed, relocated fat bundle reviews without the source checkout and refuses overwrite (1858.418833ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 25
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 36160.357333

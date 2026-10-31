@@ -1,0 +1,13 @@
+✔ command installer emits the bundled OpenCode command and is idempotent (268.931833ms)
+✔ command installer preserves an existing customized command (135.195291ms)
+✔ command installer preserves symlinks and their targets (131.417667ms)
+✔ a relocated installed bundle registers a project-local command without its checkout (288.394417ms)
+✔ command installer rejects missing, misnamed, and inside-bundle destinations before writing (533.349208ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1491.685458

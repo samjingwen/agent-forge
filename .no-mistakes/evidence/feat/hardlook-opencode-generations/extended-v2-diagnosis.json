@@ -1,0 +1,179 @@
+{
+  "fixture": "extended-native-deep-and-public-cli",
+  "observations": [
+    {
+      "generation": 2,
+      "installation": {
+        "installed": "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/extended/v2/installed",
+        "complete_bundle": true,
+        "refresh_harness": true
+      },
+      "command": {
+        "installed": "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/extended/v2/repo/.opencode/commands/hardlook.md",
+        "command": "hardlook",
+        "source": "command",
+        "refresh_harness": true,
+        "already_installed": false
+      },
+      "doctor": {
+        "harness": "opencode",
+        "available": true,
+        "version": "2.2.5",
+        "generation": 2
+      },
+      "review": {
+        "version": 1,
+        "mode": "deep",
+        "status": "complete",
+        "context_id": "3c8998a3f3caf86b6885f1599fe0c1aabff04fe28a93721e6b06be231faf7677",
+        "head": "128d8bdaa5689d6a6354dc39ce319ee6554b40d7",
+        "base": "8b9ad905069513261e2cffa62c22826de33e517c",
+        "changed_paths": [
+          "calc.js"
+        ],
+        "excluded_paths": [],
+        "peers": [
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/fixture#native",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native deep review fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Equivalent calculation.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          },
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/second#native",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native deep review fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Equivalent calculation.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          }
+        ],
+        "lead": {
+          "harness": "opencode",
+          "requested_model": "local-fixture/fixture#native",
+          "harness_version": "2.2.5",
+          "harness_generation": 2,
+          "report": {
+            "summary": "Native deep review fixture.",
+            "risk_level": "low",
+            "risk_rationale": "Equivalent calculation.",
+            "reviewed_paths": [
+              "calc.js"
+            ],
+            "findings": []
+          }
+        },
+        "limitations": [],
+        "report": {
+          "summary": "Native deep review fixture.",
+          "risk_level": "low",
+          "risk_rationale": "Equivalent calculation.",
+          "reviewed_paths": [
+            "calc.js"
+          ],
+          "findings": []
+        }
+      },
+      "provider_requests": [
+        {
+          "model": "second",
+          "tools": [],
+          "lead": false
+        },
+        {
+          "model": "second",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "lead": false
+        },
+        {
+          "model": "fixture",
+          "tools": [],
+          "lead": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "lead": false
+        },
+        {
+          "model": "fixture",
+          "tools": [],
+          "lead": true
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "lead": true
+        }
+      ],
+      "unchanged_checkout": true,
+      "rejected": [
+        {
+          "harness": "claude-code",
+          "exit_code": 2,
+          "diagnostic": {
+            "status": "incomplete",
+            "reason": "invalid model selector"
+          }
+        },
+        {
+          "harness": "codex",
+          "exit_code": 2,
+          "diagnostic": {
+            "status": "incomplete",
+            "reason": "invalid model selector"
+          }
+        },
+        {
+          "harness": "cursor",
+          "exit_code": 2,
+          "diagnostic": {
+            "status": "incomplete",
+            "reason": "invalid model selector"
+          }
+        },
+        {
+          "harness": "pi",
+          "exit_code": 2,
+          "diagnostic": {
+            "status": "incomplete",
+            "reason": "invalid model selector"
+          }
+        }
+      ]
+    }
+  ]
+}

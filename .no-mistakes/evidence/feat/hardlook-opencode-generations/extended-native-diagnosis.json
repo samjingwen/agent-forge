@@ -1,0 +1,68 @@
+{
+  "fixture": "extended-native-deep-and-public-cli",
+  "observations": [
+    {
+      "generation": 1,
+      "failed_review": {
+        "version": 1,
+        "mode": "deep",
+        "status": "incomplete",
+        "context_id": "63d3f5dc6171aade57f6d88beb5d144b0445d6c620a126b94bd86a2b85a2274c",
+        "head": "f697b67f9e85651bfc797da9228f1b77d7ccbb6c",
+        "base": "8d228c16b8e40003c7368a82fb2ab70c960a279a",
+        "changed_paths": [
+          "calc.js"
+        ],
+        "excluded_paths": [],
+        "peers": [
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/fixture",
+            "harness_version": "1.19.5",
+            "harness_generation": 1,
+            "report": {
+              "summary": "Native deep review fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Equivalent calculation.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          },
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/second",
+            "status": "failed",
+            "reason": "process-exit",
+            "exit_code": 1,
+            "diagnosis": null
+          }
+        ],
+        "lead": null,
+        "limitations": [
+          "reviewer-or-lead-failed"
+        ],
+        "report": null
+      },
+      "calls": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "lead": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read"
+          ],
+          "lead": false
+        }
+      ],
+      "native_stderr": "\u001b[91m\u001b[1mError: \u001b[0mUnexpected error\n\ndatabase is locked\n"
+    }
+  ]
+}

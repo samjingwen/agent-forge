@@ -1,0 +1,156 @@
+{
+  "fixture": "opencode-native-loopback-v1",
+  "observations": [
+    {
+      "generation": 1,
+      "version": "1.19.5",
+      "exit_code": 0,
+      "status": "complete",
+      "report": {
+        "summary": "Native transport fixture.",
+        "risk_level": "low",
+        "risk_rationale": "Disposable fixture.",
+        "reviewed_paths": [
+          "calc.js"
+        ],
+        "findings": []
+      },
+      "limitations": [],
+      "failures": [],
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": true,
+          "skill_denied": false
+        }
+      ]
+    },
+    {
+      "generation": 2,
+      "version": "opencode v2.2.5",
+      "exit_code": 0,
+      "status": "complete",
+      "report": {
+        "summary": "Native transport fixture.",
+        "risk_level": "low",
+        "risk_rationale": "Disposable fixture.",
+        "reviewed_paths": [
+          "calc.js"
+        ],
+        "findings": []
+      },
+      "limitations": [],
+      "failures": [],
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": true,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": true,
+          "skill_denied": true
+        }
+      ]
+    }
+  ]
+}

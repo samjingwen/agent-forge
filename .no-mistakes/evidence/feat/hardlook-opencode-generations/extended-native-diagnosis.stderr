@@ -1,0 +1,20 @@
+node:internal/modules/run_main:111
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'incomplete'
+- 'complete'
+
+    at file://~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/extended-native.mjs:79:12 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'incomplete',
+  expected: 'complete',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v26.13.0

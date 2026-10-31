@@ -1,0 +1,150 @@
+[
+  {
+    "args": [
+      "doctor",
+      "--binary",
+      "opencode=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/native/v1/package/bin/opencode",
+      "--binary",
+      "claude-code=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "codex=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "cursor=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "pi=/opt/homebrew/Cellar/node/26.13.0_1/bin/node"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"node\": \"26.13.0\",\n  \"harnesses\": [\n    {\n      \"harness\": \"opencode\",\n      \"available\": true,\n      \"version\": \"1.19.5\",\n      \"generation\": 1\n    },\n    {\n      \"harness\": \"claude-code\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"codex\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"cursor\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"pi\",\n      \"available\": true,\n      \"version\": null\n    }\n  ],\n  \"model_access_checked\": false\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "doctor",
+      "--binary",
+      "opencode=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/native/v2/package/bin/opencode",
+      "--binary",
+      "claude-code=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "codex=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "cursor=/opt/homebrew/Cellar/node/26.13.0_1/bin/node",
+      "--binary",
+      "pi=/opt/homebrew/Cellar/node/26.13.0_1/bin/node"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"node\": \"26.13.0\",\n  \"harnesses\": [\n    {\n      \"harness\": \"opencode\",\n      \"available\": true,\n      \"version\": \"2.2.5\",\n      \"generation\": 2\n    },\n    {\n      \"harness\": \"claude-code\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"codex\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"cursor\",\n      \"available\": true,\n      \"version\": null\n    },\n    {\n      \"harness\": \"pi\",\n      \"available\": true,\n      \"version\": null\n    }\n  ],\n  \"model_access_checked\": false\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "install",
+      "--dest",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/hardlook"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"installed\": \"~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/hardlook\",\n  \"complete_bundle\": true,\n  \"refresh_harness\": true\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "install-opencode-command",
+      "--dest",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/.opencode/commands/hardlook.md"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"installed\": \"~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/.opencode/commands/hardlook.md\",\n  \"command\": \"hardlook\",\n  \"source\": \"command\",\n  \"refresh_harness\": true,\n  \"already_installed\": false\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "install-opencode-command",
+      "--dest",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/.opencode/commands/hardlook.md"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"installed\": \"~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/.opencode/commands/hardlook.md\",\n  \"command\": \"hardlook\",\n  \"source\": \"command\",\n  \"refresh_harness\": true,\n  \"already_installed\": true\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "review",
+      "--repo",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun",
+      "--intent",
+      "Reject invalid selectors before repository access.",
+      "--peer",
+      "claude-code:model#high",
+      "--binary",
+      "claude-code=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/nonexistent"
+    ],
+    "code": 2,
+    "stdout": "",
+    "stderr": "{\"status\":\"incomplete\",\"reason\":\"invalid model selector\"}\n"
+  },
+  {
+    "args": [
+      "review",
+      "--repo",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun",
+      "--intent",
+      "Reject invalid selectors before repository access.",
+      "--peer",
+      "codex:model#high",
+      "--binary",
+      "codex=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/nonexistent"
+    ],
+    "code": 2,
+    "stdout": "",
+    "stderr": "{\"status\":\"incomplete\",\"reason\":\"invalid model selector\"}\n"
+  },
+  {
+    "args": [
+      "review",
+      "--repo",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun",
+      "--intent",
+      "Reject invalid selectors before repository access.",
+      "--peer",
+      "cursor:model#high",
+      "--binary",
+      "cursor=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/nonexistent"
+    ],
+    "code": 2,
+    "stdout": "",
+    "stderr": "{\"status\":\"incomplete\",\"reason\":\"invalid model selector\"}\n"
+  },
+  {
+    "args": [
+      "review",
+      "--repo",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun",
+      "--intent",
+      "Reject invalid selectors before repository access.",
+      "--peer",
+      "pi:model#high",
+      "--binary",
+      "pi=~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun/nonexistent"
+    ],
+    "code": 2,
+    "stdout": "",
+    "stderr": "{\"status\":\"incomplete\",\"reason\":\"invalid model selector\"}\n"
+  },
+  {
+    "args": [
+      "review",
+      "--repo",
+      "~/.no-mistakes/worktrees/fc088e17c54f/01M699X83DT5CKX4Y7WTAC11F0/.test-disposable/public-rerun",
+      "--base",
+      "main",
+      "--intent",
+      "Reject unsupported actual executable.",
+      "--peer",
+      "opencode:fixture",
+      "--binary",
+      "opencode=/opt/homebrew/Cellar/node/26.13.0_1/bin/node"
+    ],
+    "code": 2,
+    "stdout": "{\n  \"version\": 1,\n  \"mode\": \"routine\",\n  \"status\": \"incomplete\",\n  \"context_id\": \"22691b41c4af5386b492cae66bc6ce1f470630d25b7da8536fbcee1a18926053\",\n  \"head\": \"7458f5d4e64938f308a82c112225188c5c16a38f\",\n  \"base\": \"d446c48092962128ab808caf5648c95fed16f80c\",\n  \"changed_paths\": [\n    \"calc.js\"\n  ],\n  \"excluded_paths\": [],\n  \"peers\": [\n    {\n      \"harness\": \"opencode\",\n      \"requested_model\": \"fixture\",\n      \"status\": \"failed\",\n      \"reason\": \"unsupported-cli-version\",\n      \"exit_code\": null,\n      \"diagnosis\": null\n    }\n  ],\n  \"limitations\": [\n    \"reviewer-or-lead-failed\"\n  ],\n  \"report\": null\n}\n",
+    "stderr": ""
+  }
+]

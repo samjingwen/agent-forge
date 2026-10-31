@@ -1,0 +1,178 @@
+[
+  {
+    "generation": 1,
+    "mode": "deep",
+    "attempt": 0,
+    "exit_code": 0,
+    "version": "1.19.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 1,
+    "mode": "deep",
+    "attempt": 1,
+    "exit_code": 0,
+    "version": "1.19.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 1,
+    "mode": "deep",
+    "attempt": 2,
+    "exit_code": 0,
+    "version": "1.19.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 1,
+    "mode": "routine",
+    "exit_code": 0,
+    "version": "1.19.5",
+    "status": "complete",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read"
+    ],
+    "allowed_read_observed": true,
+    "literal_private_read_denied": true,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 2,
+    "mode": "deep",
+    "attempt": 0,
+    "exit_code": 0,
+    "version": "2.2.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read",
+      "skill"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 2,
+    "mode": "deep",
+    "attempt": 1,
+    "exit_code": 0,
+    "version": "2.2.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read",
+      "skill"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 2,
+    "mode": "deep",
+    "attempt": 2,
+    "exit_code": 0,
+    "version": "2.2.5",
+    "status": "complete",
+    "requested_model": [
+      "local-fixture/fixture",
+      "local-fixture/peer"
+    ],
+    "lead": "local-fixture/lead",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read",
+      "skill"
+    ],
+    "allowed_read_observed": false,
+    "literal_private_read_denied": false,
+    "skill_load_denied": false,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  },
+  {
+    "generation": 2,
+    "mode": "routine",
+    "exit_code": 0,
+    "version": "opencode v2.2.5",
+    "status": "complete",
+    "exposed_tools": [
+      "glob",
+      "grep",
+      "read",
+      "skill"
+    ],
+    "allowed_read_observed": true,
+    "literal_private_read_denied": true,
+    "skill_load_denied": true,
+    "private_content_leaked": false,
+    "forbidden_skill_loaded": false
+  }
+]
