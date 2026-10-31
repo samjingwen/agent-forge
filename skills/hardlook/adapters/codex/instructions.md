@@ -9,6 +9,10 @@ JSON output schema. It feeds the prompt over stdin, starts a fresh invocation,
 and never passes approval/sandbox bypass flags. Codex's existing authentication
 and model configuration remain the host's responsibility.
 
+The Codex transport schema requires every finding field and permits `reproduction: null` for absence.
+Only the Codex adapter converts that null to omission before canonical report and evidence validation.
+The canonical schema still permits older reports without reproduction and rejects explicit null reproduction objects.
+
 Choose an actual model accepted by the installed CLI. Validate the adapter
 against its exact CLI version before advertising native acceptance. The core
 skill also works directly in Codex without launching another CLI process.

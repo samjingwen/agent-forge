@@ -23,6 +23,9 @@ Each adapter documents its source interface and model/permission assumptions.
 New CLI versions must be exercised before extending native claims.
 
 The 0.2.0 reproduction-evidence contract is covered by deterministic native-shaped fixtures, including installed relocation and deep synthesis failure handling.
+The Codex fixture consumes the generated `--output-schema` file and checks the strict contract that every object is closed and every property required, including nested reproduction fields.
+The independent oracle is OpenAI's [Structured Outputs schema contract](https://developers.openai.com/api/docs/guides/structured-outputs#all-fields-must-be-required); negative controls reject optional fields at each object depth and open objects.
+Codex uses a required nullable reproduction field for transport; the adapter normalizes only null absence before canonical evidence validation.
 That coverage does not extend the historical native CLI or live model-quality claims below.
 
 On 2026-10-11, OpenCode reported the introduced subtraction defect with a

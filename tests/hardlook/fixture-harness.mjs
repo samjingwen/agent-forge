@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
+import { validateStrictSchema, validateSchemaValue } from './strict-schema.mjs';
 
 const harness = path.basename(process.argv[1]);
 const args = process.argv.slice(2);
@@ -10,6 +11,11 @@ if (args.includes('--version')) {
   console.log('fixture 1.2.3');
   process.exit(0);
 }
+const outputSchema =
+  harness === 'codex'
+    ? JSON.parse(fs.readFileSync(args[args.indexOf('--output-schema') + 1], 'utf8'))
+    : null;
+if (outputSchema) validateStrictSchema(outputSchema);
 let input = '';
 for await (const chunk of process.stdin) input += chunk;
 if (harness === 'cursor') input = args.at(-1);
@@ -57,7 +63,7 @@ const report = {
   reviewed_paths: model === 'partial' ? [] : packet.changed_paths,
   findings: [],
 };
-if (model === 'finding' || model.startsWith('repro-'))
+if (model === 'finding' || model === 'null-reproduction' || model.startsWith('repro-'))
   report.findings.push({
     file: packet.changed_paths[0],
     line: 1,
@@ -94,6 +100,13 @@ if (model.startsWith('repro-')) {
   if (model === 'repro-missing-output') report.findings[0].reproduction.observed = null;
   if (model === 'repro-inconsistent') report.findings[0].reproduction.status = 'not-run';
   if (model === 'repro-empty') report.findings[0].reproduction.observed = '';
+}
+if (model === 'null-reproduction') report.findings[0].reproduction = null;
+if (outputSchema) {
+  for (const finding of report.findings) {
+    if (!Object.hasOwn(finding, 'reproduction')) finding.reproduction = null;
+  }
+  validateSchemaValue(report, outputSchema);
 }
 if (harness === 'opencode') console.log(JSON.stringify({ type: 'text', part: { text: JSON.stringify(report) } }));
 else if (harness === 'claude-code') console.log(JSON.stringify({ type: 'result', structured_output: report }));

@@ -9,6 +9,7 @@ import { execute } from '../../skills/hardlook/scripts/process.mjs';
 import { packet } from '../../skills/hardlook/scripts/context.mjs';
 import { review } from '../../skills/hardlook/scripts/review.mjs';
 import { decodeReport, pipelineReport, validateReport } from '../../skills/hardlook/scripts/report.mjs';
+import { validateStrictSchema } from './strict-schema.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixtures = fileURLToPath(new URL('./', import.meta.url));
@@ -36,6 +37,7 @@ async function fixture(t) {
   await git('add', '.');
   await git('commit', '-m', 'change');
   const binaries = {};
+  await fs.copyFile(path.join(fixtures, 'strict-schema.mjs'), path.join(dir, 'strict-schema.mjs'));
   for (const host of hosts) {
     const bin = path.join(dir, host);
     await fs.copyFile(path.join(fixtures, 'fixture-harness.mjs'), bin);
@@ -383,6 +385,89 @@ test('source-only findings remain actionable without a claimed reproduction', as
   assert.equal(pipelineReport(result).findings.length, 1);
 });
 
+test('OpenAI strict-schema contract rejects optional fields at every object depth', () => {
+  const object = (properties) => ({
+    type: 'object',
+    additionalProperties: false,
+    properties,
+    required: Object.keys(properties),
+  });
+  const valid = object({
+    findings: { type: 'array', items: object({ reproduction: object({ status: { type: 'string' } }) }) },
+  });
+  validateStrictSchema(valid);
+  for (const location of [
+    [],
+    ['properties', 'findings', 'items'],
+    ['properties', 'findings', 'items', 'properties', 'reproduction'],
+  ]) {
+    const invalid = structuredClone(valid);
+    let node = invalid;
+    for (const key of location) node = node[key];
+    node.required = [];
+    assert.throws(() => validateStrictSchema(invalid));
+  }
+  const open = structuredClone(valid);
+  open.properties.findings.items.additionalProperties = true;
+  assert.throws(() => validateStrictSchema(open));
+});
+
+for (const model of ['valid', 'finding', 'repro-not-run', 'repro-reported', 'repro-empty'])
+  test(`Codex strict transport handles ${model} for reviewers and deep leads`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({
+      ...f.options,
+      mode: 'deep',
+      peers: [`codex:${model}`, 'opencode:valid'],
+    });
+    assert.equal(result.status, 'complete');
+    assert.deepEqual(result.report, result.peers[0].report);
+    assert.deepEqual(result.lead.report, result.report);
+    if (model === 'valid') assert.deepEqual(result.report.findings, []);
+    else if (model === 'finding') {
+      assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+      assert.equal(pipelineReport(result).findings.length, 1);
+    } else {
+      assert.deepEqual(result.report.findings[0].reproduction, {
+        status: model === 'repro-not-run' ? 'not-run' : 'reported-unverified',
+        command: 'node calc.js',
+        expected: '1\n',
+        observed: model === 'repro-not-run' ? null : model === 'repro-empty' ? '' : '2\n',
+      });
+    }
+  });
+
+for (const host of hosts)
+  test(`${host}: null reproduction is normalized only for Codex transport`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`${host}:null-reproduction`] });
+    assert.equal(result.status, host === 'codex' ? 'complete' : 'incomplete');
+    if (host === 'codex') assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+    else assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+for (const model of ['repro-verified', 'repro-missing-output', 'repro-inconsistent'])
+  test(`Codex transport does not weaken ${model} evidence validation`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`codex:${model}`] });
+    assert.equal(result.status, 'incomplete');
+    assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+test('Codex lead normalization still refuses altered peer observations', async (t) => {
+  const f = await fixture(t);
+  const result = await review({
+    ...f.options,
+    mode: 'deep',
+    peers: ['codex:repro-reported', 'opencode:valid'],
+    lead: 'codex:repro-tampered',
+  });
+  assert.equal(result.status, 'incomplete');
+  assert.ok(result.peers.every((peer) => peer.status === 'ok'));
+  assert.equal(result.lead.status, 'failed');
+  assert.throws(() => pipelineReport(result), /incomplete/);
+});
+
 test('deep synthesis retains an identical peer observation without upgrading it to confirmation', async (t) => {
   const f = await fixture(t);
   const result = await review({ ...f.options, mode: 'deep', peers: ['opencode:repro-reported', 'codex:valid'] });
@@ -487,6 +572,12 @@ test('report contract rejects forged confirmation and inconsistent observations 
     ],
   };
   assert.equal(validateReport(report, ['calc.js']), report);
+  const legacy = structuredClone(report);
+  delete legacy.findings[0].reproduction;
+  assert.equal(validateReport(legacy, ['calc.js']), legacy);
+  const nullReproduction = structuredClone(report);
+  nullReproduction.findings[0].reproduction = null;
+  assert.throws(() => validateReport(nullReproduction, ['calc.js']));
   for (const invalid of [
     { status: 'verified' },
     { verified: true },
