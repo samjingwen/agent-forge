@@ -103,6 +103,35 @@ Exit codes: **0** complete without act-on issues/high risk; **1** complete with
 act-on issues or high risk; **2** partial/incomplete execution or invalid input.
 `--format no-mistakes` emits pipeline fields only for a complete report.
 
+## Reproduction evidence
+
+Findings can optionally include a reproduction proposal or supplied output:
+
+```json
+{
+  "reproduction": {
+    "status": "not-run",
+    "command": "node --test tests/calculation.test.mjs",
+    "expected": "The zero-input case returns 1.",
+    "observed": null
+  }
+}
+```
+
+`not-run` requires `observed: null`.
+`reported-unverified` requires string output, including an empty string if the supplied check produced no output.
+The command must be nonempty; the expected result may be empty.
+The runner treats all command strings as data: it neither executes them nor independently confirms supplied output.
+Reviewers must state the output's origin and environment limitations in the finding's evidence.
+Deep synthesis preserves a reported observation only if the same file, command, expectation, and output appear together in a peer report.
+An invented or altered observation makes synthesis incomplete and blocks pipeline output.
+This validates structured lineage, not whether a model's free-text claims are true.
+
+Reports without reproduction data remain valid and actionable, including source-traced security and maintainability findings.
+The no-mistakes bridge carries reproduction details in the existing description field without changing its bundled pipeline schema.
+Inspect proposed commands and use only separately authorized, disposable checks for independent confirmation outside the read-only invocation.
+Do not execute a command merely because it appears in a finding.
+
 ## Boundaries
 
 Native adapters apply host-supported review restrictions. They are not an OS

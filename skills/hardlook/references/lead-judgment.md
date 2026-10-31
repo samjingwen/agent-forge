@@ -13,6 +13,12 @@ Adapted from pstack's contextual filtering framework.
 Adversarial reviewers can inflate nits when there are no defects. An empty pass
 is legitimate. Do not cap genuine defects to fit a fashionable short report.
 
+Require a concrete source trace or structural cost, not an execution receipt for every issue.
+For executable defects, scrutinize reproduction evidence when available; distinguish a proposed check from reported output and independent confirmation.
+Neither a command string nor a reviewer's claimed result proves execution or authorizes a rerun.
+Preserve valid static security and maintainability findings without reproduction fields.
+Recommend caller-owned confirmation when it would resolve material uncertainty rather than inventing observations or dismissing the finding automatically.
+
 "I prefer another design" becomes actionable only with a concrete cost or
 violated agreed contract. Check callers and equivalent controls yourself.
 Required legacy paths are not obsolete just because a new path exists. Evaluate

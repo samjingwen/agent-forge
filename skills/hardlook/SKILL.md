@@ -31,6 +31,11 @@ Model agreement is a prioritization signal, not proof. Describe what was read
 and what remains unchecked. Changes, builds, and tests invalidate evidence
 only for the affected revision or behavior; keep checks appropriately scoped.
 
+Separate source-traced evidence, proposed checks, and reported output.
+Never invent execution or treat a reviewer's command as permission to run it.
+The bundled runner is read-only: reproduction output remains `reported-unverified`, not independently confirmed.
+Security and structural findings do not require execution when concrete static evidence substantiates them.
+
 ## Context and authority
 
 Preserve the original request and deliberate decisions. Read the relevant

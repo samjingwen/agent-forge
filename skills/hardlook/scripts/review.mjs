@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import os from 'node:os';
 import { packet } from './context.mjs';
-import { schema, covered } from './report.mjs';
-import { selector, runPeer } from './adapters.mjs';
+import { schema, covered, validateSynthesis } from './report.mjs';
+import { codexSchema, selector, runPeer } from './adapters.mjs';
 
 const load = (relative) => fs.readFile(new URL(`../${relative}`, import.meta.url), 'utf8');
 
@@ -60,8 +60,8 @@ export async function review(options) {
     };
   const scratch = await fs.mkdtemp(path.join(os.tmpdir(), 'hardlook-'));
   try {
-    const schemaPath = path.join(scratch, 'report.schema.json');
-    await fs.writeFile(schemaPath, JSON.stringify(schema), { mode: 0o600 });
+    const schemaPath = path.join(scratch, 'codex-report.schema.json');
+    await fs.writeFile(schemaPath, JSON.stringify(codexSchema), { mode: 0o600 });
     const common = {
       repo: context.repo,
       schemaPath,
@@ -92,7 +92,10 @@ export async function review(options) {
     if (mode === 'deep' && results.every((item) => item.status === 'ok')) {
       try {
         leadResult = await runPeer(lead, { ...common, prompt: await promptFor(context, mode, results) });
-        report = leadResult.report;
+        report = validateSynthesis(
+          leadResult.report,
+          results.map((item) => item.report),
+        );
       } catch (error) {
         leadResult = { status: 'failed', reason: error.kind ?? 'invalid-report' };
       }

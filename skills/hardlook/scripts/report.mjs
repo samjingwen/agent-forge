@@ -43,7 +43,41 @@ export function validateReport(report, paths) {
   for (const path of [...reviewed, ...report.findings.map((item) => item.file)]) {
     if (!allowed.has(path)) throw new Error('finding or coverage outside changed scope');
   }
+  for (const { reproduction } of report.findings) {
+    if (!reproduction) continue;
+    const unrun = reproduction.status === 'not-run';
+    if (unrun !== (reproduction.observed === null)) throw new Error('reproduction status and observation disagree');
+  }
   return report;
+}
+
+function observationKey(finding) {
+  const { command, expected, observed } = finding.reproduction;
+  return JSON.stringify([finding.file, command, expected, observed]);
+}
+
+export function validateSynthesis(report, peers) {
+  const observations = new Set(
+    peers.flatMap((peer) =>
+      peer.findings.filter((finding) => finding.reproduction?.status === 'reported-unverified').map(observationKey),
+    ),
+  );
+  for (const finding of report.findings) {
+    if (finding.reproduction?.status === 'reported-unverified' && !observations.has(observationKey(finding))) {
+      throw new Error('lead introduced or altered a reported observation');
+    }
+  }
+  return report;
+}
+
+function reproductionDescription(reproduction) {
+  if (!reproduction) return '';
+  const observed = reproduction.observed === null ? 'not run' : JSON.stringify(reproduction.observed);
+  return (
+    `\nReproduction: ${reproduction.status} (not independently verified by Hardlook).\n` +
+    `Command (data only): ${JSON.stringify(reproduction.command)}\n` +
+    `Expected: ${JSON.stringify(reproduction.expected)}\nObserved: ${observed}`
+  );
 }
 
 export function covered(report, paths) {
@@ -118,7 +152,9 @@ export function pipelineReport(result) {
         action: item.action,
         source: 'hardlook',
         review_scope: 'source',
-        description: `Evidence: ${item.evidence}\nConsequence: ${item.consequence}\nSuggested fix: ${item.suggestion}`,
+        description:
+          `Evidence: ${item.evidence}\nConsequence: ${item.consequence}\nSuggested fix: ${item.suggestion}` +
+          reproductionDescription(item.reproduction),
       })),
   };
   validate(output, pipelineSchema, 'no-mistakes');

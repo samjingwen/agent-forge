@@ -25,6 +25,11 @@ the concrete defect. Source-string assertions, snapshots of implementation
 shape, and coverage percentages alone do not prove behavior. Identify the
 specific missing scenario, not generic "add more tests" advice.
 
+For an executable defect, describe the smallest input/state and expected result that expose it.
+Propose a focused check as `not-run` when execution is prohibited or unavailable.
+Only record observed output when actually obtained or supplied, with its origin and verification limits.
+Do not treat a reproduction command as permission to run it, or require an executable test for a statically substantiated security or maintenance problem.
+
 ## Lean
 
 Question dead code, options with no intended use, near-copies that must change

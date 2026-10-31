@@ -18,6 +18,9 @@ For every proposed restructure, explain:
 3. What behavior and boundaries must remain intact.
 4. The focused verification that would demonstrate preservation.
 
+Structural findings can be substantiated by ownership, state, or invariant evidence without an executable reproduction.
+Keep proposed behavior-preservation checks separate from results; do not invent observed output to make a restructuring recommendation appear confirmed.
+
 Crossing 1,000 lines is a prompt to investigate cohesion, not an automatic merge
 blocker. Exclude generated outputs from authoring-quality judgments. Prefer
 responsibility-based decomposition to arbitrary helper extraction. A plausible

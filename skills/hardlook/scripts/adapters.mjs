@@ -5,6 +5,11 @@ import { schema, decodeReport, validateReport } from './report.mjs';
 
 export const binaries = { opencode: 'opencode', 'claude-code': 'claude', codex: 'codex', cursor: 'agent', pi: 'pi' };
 
+export const codexSchema = structuredClone(schema);
+const codexFinding = codexSchema.properties.findings.items;
+codexFinding.required.push('reproduction');
+codexFinding.properties.reproduction.type = ['object', 'null'];
+
 export function selector(text) {
   const split = text.indexOf(':');
   const harness = split < 0 ? text : text.slice(0, split);
@@ -104,7 +109,13 @@ export async function runPeer(peer, opts) {
     timeoutMs: opts.timeoutMs,
     maxBytes: opts.maxOutputBytes,
   });
-  const report = validateReport(decodeReport(result.stdout), opts.changedPaths);
+  const decoded = decodeReport(result.stdout);
+  if (peer.harness === 'codex' && Array.isArray(decoded?.findings)) {
+    for (const finding of decoded.findings) {
+      if (finding?.reproduction === null) delete finding.reproduction;
+    }
+  }
+  const report = validateReport(decoded, opts.changedPaths);
   // Requested selectors are recorded; no served-model claim is inferred.
   return { harness: peer.harness, requested_model: peer.model, report };
 }

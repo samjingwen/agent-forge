@@ -18,6 +18,9 @@ Choose your harness in the installer, then start a new session and ask:
 Hardlook's canonical source is [`skills/hardlook/`](../../skills/hardlook/).
 It was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook); use Agent Forge for future installations and updates.
 
+Version 0.2.0 adds optional reproduction-evidence reporting while preserving read-only review and actionable static findings.
+See the [upstream comparison and adaptation notes](upstream-refresh.md) and [evidence contract](usage.md#reproduction-evidence).
+
 ## OpenCode slash menu
 
 For a global OpenCode install, register the bundled slash-menu command too:

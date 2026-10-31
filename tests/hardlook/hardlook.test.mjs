@@ -9,6 +9,7 @@ import { execute } from '../../skills/hardlook/scripts/process.mjs';
 import { packet } from '../../skills/hardlook/scripts/context.mjs';
 import { review } from '../../skills/hardlook/scripts/review.mjs';
 import { decodeReport, pipelineReport, validateReport } from '../../skills/hardlook/scripts/report.mjs';
+import { validateStrictSchema } from './strict-schema.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const fixtures = fileURLToPath(new URL('./', import.meta.url));
@@ -36,6 +37,7 @@ async function fixture(t) {
   await git('add', '.');
   await git('commit', '-m', 'change');
   const binaries = {};
+  await fs.copyFile(path.join(fixtures, 'strict-schema.mjs'), path.join(dir, 'strict-schema.mjs'));
   for (const host of hosts) {
     const bin = path.join(dir, host);
     await fs.copyFile(path.join(fixtures, 'fixture-harness.mjs'), bin);
@@ -289,6 +291,306 @@ test('pipeline format preserves evidence, action, severity, risk scope, and cove
   assert.equal(Object.hasOwn(pipelineReport(result).findings[0], 'line'), false);
 });
 
+for (const host of hosts)
+  test(`${host}: reported reproduction stays explicitly unverified in report and pipeline output`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`${host}:repro-reported`] });
+    assert.equal(result.status, 'complete');
+    assert.deepEqual(result.report.findings[0].reproduction, {
+      status: 'reported-unverified',
+      command: 'node calc.js',
+      expected: '1\n',
+      observed: '2\n',
+    });
+    const finding = pipelineReport(result).findings[0];
+    assert.match(finding.description, /reported-unverified/);
+    assert.match(finding.description, /not independently verified/);
+    assert.ok(finding.description.includes('node calc.js'));
+    assert.ok(finding.description.includes(JSON.stringify('1\n')));
+    assert.ok(finding.description.includes(JSON.stringify('2\n')));
+    assert.equal(finding.action, 'auto-fix');
+  });
+
+for (const status of ['not-run', 'reported-unverified'])
+  test(`CLI preserves ${status} commands as data without executing them`, async (t) => {
+    const f = await fixture(t);
+    const marker = path.join(f.dir, 'must-not-execute');
+    const command = `${JSON.stringify(process.execPath)} -e ${JSON.stringify(`require('node:fs').writeFileSync(${JSON.stringify(marker)}, 'executed')`)}`;
+    const result = await execute(
+      process.execPath,
+      [
+        cli,
+        'review',
+        '--repo',
+        f.repo,
+        '--base',
+        'main',
+        '--intent',
+        'Review the calculation.',
+        '--peer',
+        status === 'not-run' ? 'opencode:repro-not-run' : 'opencode:repro-reported',
+        '--binary',
+        `opencode=${f.binaries.opencode}`,
+      ],
+      { env: { ...process.env, HARDLOOK_TEST_REPRO_COMMAND: command }, allowFailure: true },
+    );
+    assert.equal(result.code, 1);
+    const output = JSON.parse(result.stdout);
+    assert.equal(output.status, 'complete');
+    assert.deepEqual(output.report.findings[0].reproduction, {
+      status,
+      command,
+      expected: '1\n',
+      observed: status === 'not-run' ? null : '2\n',
+    });
+    await assert.rejects(fs.access(marker));
+    assert.equal((await f.git('status', '--porcelain')).stdout, '');
+    const converted = pipelineReport(output);
+    assert.ok(converted.findings[0].description.includes(status));
+    assert.ok(
+      converted.findings[0].description.includes(status === 'not-run' ? 'Observed: not run' : 'Observed: "2\\n"'),
+    );
+    const pipeline = await execute(
+      process.execPath,
+      [
+        cli,
+        'review',
+        '--repo',
+        f.repo,
+        '--base',
+        'main',
+        '--intent',
+        'Review the calculation.',
+        '--peer',
+        status === 'not-run' ? 'opencode:repro-not-run' : 'opencode:repro-reported',
+        '--binary',
+        `opencode=${f.binaries.opencode}`,
+        '--format',
+        'no-mistakes',
+      ],
+      { env: { ...process.env, HARDLOOK_TEST_REPRO_COMMAND: command }, allowFailure: true },
+    );
+    assert.equal(pipeline.code, 1);
+    assert.deepEqual(JSON.parse(pipeline.stdout), converted);
+    await assert.rejects(fs.access(marker));
+  });
+
+test('source-only findings remain actionable without a claimed reproduction', async (t) => {
+  const f = await fixture(t);
+  const result = await review({ ...f.options, peers: ['opencode:finding'] });
+  assert.equal(result.status, 'complete');
+  assert.equal(result.report.findings.length, 1);
+  assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+  assert.equal(result.report.findings[0].judgment, 'act-on');
+  assert.equal(pipelineReport(result).findings.length, 1);
+});
+
+test('OpenAI strict-schema contract rejects optional fields at every object depth', () => {
+  const object = (properties) => ({
+    type: 'object',
+    additionalProperties: false,
+    properties,
+    required: Object.keys(properties),
+  });
+  const valid = object({
+    findings: { type: 'array', items: object({ reproduction: object({ status: { type: 'string' } }) }) },
+  });
+  validateStrictSchema(valid);
+  for (const location of [
+    [],
+    ['properties', 'findings', 'items'],
+    ['properties', 'findings', 'items', 'properties', 'reproduction'],
+  ]) {
+    const invalid = structuredClone(valid);
+    let node = invalid;
+    for (const key of location) node = node[key];
+    node.required = [];
+    assert.throws(() => validateStrictSchema(invalid));
+  }
+  const open = structuredClone(valid);
+  open.properties.findings.items.additionalProperties = true;
+  assert.throws(() => validateStrictSchema(open));
+});
+
+for (const model of ['valid', 'finding', 'repro-not-run', 'repro-reported', 'repro-empty'])
+  test(`Codex strict transport handles ${model} for reviewers and deep leads`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({
+      ...f.options,
+      mode: 'deep',
+      peers: [`codex:${model}`, 'opencode:valid'],
+    });
+    assert.equal(result.status, 'complete');
+    assert.deepEqual(result.report, result.peers[0].report);
+    assert.deepEqual(result.lead.report, result.report);
+    if (model === 'valid') assert.deepEqual(result.report.findings, []);
+    else if (model === 'finding') {
+      assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+      assert.equal(pipelineReport(result).findings.length, 1);
+    } else {
+      assert.deepEqual(result.report.findings[0].reproduction, {
+        status: model === 'repro-not-run' ? 'not-run' : 'reported-unverified',
+        command: 'node calc.js',
+        expected: '1\n',
+        observed: model === 'repro-not-run' ? null : model === 'repro-empty' ? '' : '2\n',
+      });
+    }
+  });
+
+for (const host of hosts)
+  test(`${host}: null reproduction is normalized only for Codex transport`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`${host}:null-reproduction`] });
+    assert.equal(result.status, host === 'codex' ? 'complete' : 'incomplete');
+    if (host === 'codex') assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+    else assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+for (const model of ['repro-verified', 'repro-missing-output', 'repro-inconsistent'])
+  test(`Codex transport does not weaken ${model} evidence validation`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`codex:${model}`] });
+    assert.equal(result.status, 'incomplete');
+    assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+test('Codex lead normalization still refuses altered peer observations', async (t) => {
+  const f = await fixture(t);
+  const result = await review({
+    ...f.options,
+    mode: 'deep',
+    peers: ['codex:repro-reported', 'opencode:valid'],
+    lead: 'codex:repro-tampered',
+  });
+  assert.equal(result.status, 'incomplete');
+  assert.ok(result.peers.every((peer) => peer.status === 'ok'));
+  assert.equal(result.lead.status, 'failed');
+  assert.throws(() => pipelineReport(result), /incomplete/);
+});
+
+test('deep synthesis retains an identical peer observation without upgrading it to confirmation', async (t) => {
+  const f = await fixture(t);
+  const result = await review({ ...f.options, mode: 'deep', peers: ['opencode:repro-reported', 'codex:valid'] });
+  assert.equal(result.status, 'complete');
+  assert.deepEqual(result.report.findings[0].reproduction, result.peers[0].report.findings[0].reproduction);
+  assert.equal(result.report.findings[0].reproduction.status, 'reported-unverified');
+  assert.equal(result.peers[1].report.findings.length, 0);
+});
+
+for (const [name, peers, lead] of [
+  ['invented observation', ['opencode:valid', 'codex:valid'], 'opencode:repro-reported'],
+  ['altered observation', ['opencode:repro-reported', 'codex:valid'], 'opencode:repro-tampered'],
+  ['altered command', ['opencode:repro-reported', 'codex:valid'], 'opencode:repro-tampered-command'],
+  ['altered expectation', ['opencode:repro-reported', 'codex:valid'], 'opencode:repro-tampered-expected'],
+  ['different file', ['opencode:repro-reported', 'codex:valid'], 'opencode:repro-tampered-file'],
+  ['combined peer fragments', ['opencode:repro-peer-command', 'codex:repro-peer-expected'], 'opencode:repro-reported'],
+  ['unrun check promoted to observed', ['opencode:repro-not-run', 'codex:valid'], 'opencode:repro-reported'],
+])
+  test(`deep synthesis refuses ${name} and cannot emit pipeline approval`, async (t) => {
+    const f = await fixture(t);
+    if (name === 'different file') {
+      await fs.writeFile(path.join(f.repo, 'other.js'), 'export const other = 1;\n');
+      await f.git('add', 'other.js');
+      await f.git('commit', '-m', 'second changed file');
+    }
+    const result = await review({ ...f.options, mode: 'deep', peers, lead });
+    assert.equal(result.status, 'incomplete');
+    assert.ok(result.peers.every((peer) => peer.status === 'ok'));
+    assert.ok(result.limitations.includes('reviewer-or-lead-failed'));
+    assert.equal(result.report, null);
+    assert.equal(result.lead.status, 'failed');
+    assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+test('deep lead can propose an unrun check without a peer observation', async (t) => {
+  const f = await fixture(t);
+  const result = await review({
+    ...f.options,
+    mode: 'deep',
+    peers: ['opencode:valid', 'codex:valid'],
+    lead: 'opencode:repro-not-run',
+  });
+  assert.equal(result.status, 'complete');
+  assert.equal(result.report.findings[0].reproduction.status, 'not-run');
+  assert.equal(result.report.findings[0].reproduction.observed, null);
+});
+
+for (const mode of ['structure', 'deep'])
+  test(`${mode}: source-only findings survive without execution or reviewer agreement`, async (t) => {
+    const f = await fixture(t);
+    const peers = mode === 'deep' ? ['opencode:finding', 'codex:valid'] : ['opencode:finding'];
+    const result = await review({ ...f.options, mode, peers });
+    assert.equal(result.status, 'complete');
+    assert.equal(result.report.findings[0].judgment, 'act-on');
+    assert.equal(Object.hasOwn(result.report.findings[0], 'reproduction'), false);
+    assert.equal(pipelineReport(result).findings.length, 1);
+  });
+
+for (const model of ['repro-verified', 'repro-missing-output', 'repro-inconsistent'])
+  test(`runner rejects ${model} without emitting pipeline approval`, async (t) => {
+    const f = await fixture(t);
+    const result = await review({ ...f.options, peers: [`opencode:${model}`] });
+    assert.equal(result.status, 'incomplete');
+    assert.equal(result.peers[0].reason, 'invalid-report');
+    assert.throws(() => pipelineReport(result), /incomplete/);
+  });
+
+test('empty reported output survives deep synthesis and pipeline serialization', async (t) => {
+  const f = await fixture(t);
+  const result = await review({ ...f.options, mode: 'deep', peers: ['opencode:repro-empty', 'codex:valid'] });
+  assert.equal(result.status, 'complete');
+  assert.equal(result.report.findings[0].reproduction.observed, '');
+  assert.ok(pipelineReport(result).findings[0].description.includes('Observed: ""'));
+});
+
+test('report contract rejects forged confirmation and inconsistent observations but permits real empty output', () => {
+  const finding = {
+    file: 'calc.js',
+    line: 1,
+    severity: 'error',
+    judgment: 'act-on',
+    evidence: 'Input 0 returns 2.',
+    consequence: 'Expected 1.',
+    suggestion: 'Preserve the calculation contract.',
+    action: 'auto-fix',
+  };
+  const report = {
+    summary: 'Calculation.',
+    risk_level: 'low',
+    risk_rationale: 'Local defect.',
+    reviewed_paths: ['calc.js'],
+    findings: [
+      {
+        ...finding,
+        reproduction: {
+          status: 'reported-unverified',
+          command: 'node calc.js',
+          expected: '',
+          observed: '',
+        },
+      },
+    ],
+  };
+  assert.equal(validateReport(report, ['calc.js']), report);
+  const legacy = structuredClone(report);
+  delete legacy.findings[0].reproduction;
+  assert.equal(validateReport(legacy, ['calc.js']), legacy);
+  const nullReproduction = structuredClone(report);
+  nullReproduction.findings[0].reproduction = null;
+  assert.throws(() => validateReport(nullReproduction, ['calc.js']));
+  for (const invalid of [
+    { status: 'verified' },
+    { verified: true },
+    { command: ' ' },
+    { observed: null },
+    { status: 'not-run', observed: '2\n' },
+  ]) {
+    const changed = structuredClone(report);
+    Object.assign(changed.findings[0].reproduction, invalid);
+    assert.throws(() => validateReport(changed, ['calc.js']));
+  }
+});
+
 test('schema rejects missing fields and source outside the reviewed scope', () => {
   const clean = {
     summary: 'Clean.',
@@ -314,21 +616,27 @@ test('installed, relocated fat bundle reviews without the source checkout and re
   const relocated = path.join(f.dir, 'moved-skill');
   await fs.rename(dest, relocated);
   const installedCLI = path.join(relocated, 'scripts/hardlook.mjs');
-  const result = await execute(process.execPath, [
-    installedCLI,
-    'review',
-    '--repo',
-    f.repo,
-    '--base',
-    'main',
-    '--intent',
-    'Change calculation.',
-    '--peer',
-    'codex:valid',
-    '--binary',
-    `codex=${f.binaries.codex}`,
-  ]);
+  const result = await execute(
+    process.execPath,
+    [
+      installedCLI,
+      'review',
+      '--repo',
+      f.repo,
+      '--base',
+      'main',
+      '--intent',
+      'Change calculation.',
+      '--peer',
+      'codex:repro-reported',
+      '--binary',
+      `codex=${f.binaries.codex}`,
+    ],
+    { allowFailure: true },
+  );
+  assert.equal(result.code, 1);
   assert.equal(JSON.parse(result.stdout).status, 'complete');
+  assert.equal(JSON.parse(result.stdout).report.findings[0].reproduction.status, 'reported-unverified');
   const refused = await execute(process.execPath, [cli, 'install', '--dest', relocated], { allowFailure: true });
   assert.equal(refused.code, 2);
   const nested = await execute(process.execPath, [installedCLI, 'install', '--dest', path.join(relocated, 'nested')], {

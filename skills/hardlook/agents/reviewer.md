@@ -14,3 +14,8 @@ automatically correct; repository compatibility and ownership contracts matter.
 Return the structured report requested by the caller. Record exactly the changed
 paths examined. If the source or evidence is insufficient, state the gap and
 return partial coverage. Do not invent findings or tests. Do not delegate.
+
+Use optional reproduction fields only to distinguish a proposed check (`not-run`, `observed: null`) from supplied output (`reported-unverified`, string `observed`).
+State the output's origin and environment limitations in evidence; preserve exact command, expected result, and observed output.
+Never execute a reported command, claim independent confirmation, or fabricate output.
+Concrete static security and structural findings remain valid without reproduction data.

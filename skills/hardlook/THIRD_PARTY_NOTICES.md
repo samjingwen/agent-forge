@@ -64,6 +64,11 @@ SOFTWARE.
 
 Source: https://github.com/cursor/plugins/tree/9d76bcab133aefcccb16121d7be874e6aa823729/pstack
 
+The historical source above supplies independent review and contextual lead judgment.
+Reproduction-evidence guidance is additionally adapted from https://github.com/cursor/plugins/tree/ab1f702ce8e8b6557edb56b09f52cde8bfb83f17/pstack/skills/interrogate (27 October 2026).
+Hardlook retains read-only reviewer/lead boundaries, unverified-output labels, and substantiated static findings rather than requiring command execution or importing automatic model fallbacks.
+Both pstack revisions use the following MIT license.
+
 MIT License
 
 Copyright (c) 2026 Lauren Tan
