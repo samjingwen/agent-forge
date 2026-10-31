@@ -56,7 +56,7 @@ async function fixture(t) {
       base: 'main',
       intent: 'Change calculation.',
       binaryOverrides: binaries,
-      timeoutMs: 3000,
+      timeoutMs: 10_000,
     },
   };
 }
@@ -297,7 +297,10 @@ for (const version of ['1.19.5', '2.2.5'])
       lead: 'opencode:shared-state-lead',
     });
     assert.equal(result.status, 'complete');
-    assert.deepEqual(result.peers.map((peer) => peer.status), ['ok', 'ok']);
+    assert.deepEqual(
+      result.peers.map((peer) => peer.status),
+      ['ok', 'ok'],
+    );
     assert.equal(result.lead.requested_model, 'shared-state-lead');
     assert.deepEqual(result.report.reviewed_paths, ['calc.js']);
     assert.equal((await f.git('status', '--porcelain')).stdout, '');

@@ -226,7 +226,11 @@ try {
       assert.ok(output.peers.every((peer) => peer.status === 'ok'));
       assert.equal(output.lead.requested_model, 'local-fixture/lead');
       assert.deepEqual(
-        requests.slice(firstDeep).filter((request) => request.tools.length).map((request) => request.model).sort(),
+        requests
+          .slice(firstDeep)
+          .filter((request) => request.tools.length)
+          .map((request) => request.model)
+          .sort(),
         ['fixture', 'lead', 'peer'],
       );
       assert.equal(requests.at(-1).model, 'lead');
