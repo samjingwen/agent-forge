@@ -18,8 +18,8 @@ Choose your harness in the installer, then start a new session and ask:
 Hardlook's canonical source is [`skills/hardlook/`](../../skills/hardlook/).
 It was migrated from [samjingwen/hardlook](https://github.com/samjingwen/hardlook); use Agent Forge for future installations and updates.
 
-Version 0.3.1 supports the latest OpenCode V1 and V2 releases with generation-specific launch and permission handling.
-The native overlays live under `adapters/opencode/v1/` and `v2/` within the installed skill; the review implementation and CLI interface remain shared.
+Hardlook supports the latest OpenCode V1 and V2 releases with generation-specific launch and permission handling.
+See the [bundled OpenCode instructions](../../skills/hardlook/adapters/opencode/instructions.md) for the versioned overlay layout and shared CLI interface.
 It retains 0.2.0's optional reproduction-evidence reporting, read-only review, and actionable static findings.
 See the [upstream comparison and adaptation notes](upstream-refresh.md) and [evidence contract](usage.md#reproduction-evidence).
 

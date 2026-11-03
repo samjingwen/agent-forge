@@ -65,7 +65,7 @@ It preserves the upstream MIT license and attribution.
 
 Plugin, MCP-server, and shared-library paths above are conventions for implemented components, not required empty scaffolding.
 Create those directories when real components need them; no `.gitkeep` placeholders are required.
-Tooling permits these optional roots to be absent, but rejects files or symlinks in their place and still requires every catalog-declared bundle source.
+See [architecture](docs/architecture.md#shared-source-native-integrations) for structural validation and missing-directory behavior.
 
 Use one `.git` at the repository root.
 Package directories are ordinary folders, not nested Git repositories.

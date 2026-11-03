@@ -19,8 +19,7 @@ An OpenCode plugin and a Claude Code plugin are separate formats even when they 
 Hardlook is a self-contained skill, not a native plugin.
 Its runtime helpers and harness adapters stay in `skills/hardlook/` so a skill-only install remains complete.
 Its maintainer documentation, tests, and evaluations live in `docs/hardlook/`, `tests/hardlook/`, and `evals/hardlook/`.
-Hardlook's native OpenCode overlays live in `skills/hardlook/adapters/opencode/v1/config.json` and `v2/config.json`, alongside shared adapter instructions and command assets.
-This source layout does not split the shared review implementation or change either OpenCode generation's own configuration/state locations.
+See the [bundled OpenCode adapter instructions](../skills/hardlook/adapters/opencode/instructions.md) for generation-specific assets and shared runtime behavior.
 
 Plainspoken follows the same self-contained skill boundary in `skills/plainspoken/`.
 Its optional Python linter has no third-party dependencies and remains bundled with its references, examples, and upstream license.
