@@ -59,6 +59,7 @@ Incompatible installed dependencies are excluded before copying, while integrity
 The hook also applies project-owned exclusion patterns and rejects symlinked dependency/cache roots or links escaping the copied subtree.
 Worktrunk v0.81 copies ignored directories as units, so nested exclusion patterns alone are insufficient.
 The helper inspects filenames and filesystem metadata without reading private contents and refuses a selected subtree containing private/control paths before copying anything.
+The regular packaged `node_modules/uri-js/yarn.lock` is explicitly permitted as declarative dependency metadata, not an in-use control lock.
 Do not store credentials, user data, runtime databases, transcripts, service ownership records, or validation evidence inside dependency/download directories.
 
 No broad `.cache/`, npm logs, temporary cache files, in-use locks, global authentication stores, `.env` files, local settings, Python virtual environments, build outputs, or retained review/runtime data are allowlisted.

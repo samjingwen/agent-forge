@@ -91,12 +91,17 @@ async function safeTree(directory, relative) {
     // Worktrunk v0.81 copies ignored directories as units. Do not rely on
     // descendant exclusion patterns to sanitize a selected directory.
     const name = entry.name;
+    // uri-js ships this declarative package manifest; it is not an in-use lock.
+    const packagedLock =
+      relative === 'node_modules' &&
+      entry.isFile() &&
+      path.relative(base, path.join(entry.parentPath, name)) === path.join('uri-js', 'yarn.lock');
     if (
       name === '.env' ||
       name.startsWith('.env.') ||
       name === '.npmrc' ||
       name === '.cache' ||
-      /\.(lock|pid|sock|db)$|\.sqlite|\.local\.jsonc?$/i.test(name) ||
+      (!packagedLock && /\.(lock|pid|sock|db)$|\.sqlite|\.local\.jsonc?$/i.test(name)) ||
       (!entry.isFile() && !entry.isDirectory() && !entry.isSymbolicLink())
     ) {
       throw new Error('Refusing private/control paths inside a selected dependency/cache directory.');

@@ -45,7 +45,7 @@ async function fixture(t) {
     dependency,
     'package.json',
     JSON.stringify({
-      name: 'fixture-package',
+      name: 'uri-js',
       version: '1.0.0',
       files: ['bin.js'],
       bin: { 'fixture-bin': 'bin.js' },
@@ -61,7 +61,7 @@ async function fixture(t) {
       name: 'worktree-fixture',
       version: '1.0.0',
       private: true,
-      devDependencies: { 'fixture-package': 'file:fixture-package-1.0.0.tgz' },
+      devDependencies: { 'uri-js': 'file:uri-js-1.0.0.tgz' },
       scripts: { preinstall: 'node -e "process.exit(91)"' },
     }),
   );
@@ -84,6 +84,7 @@ function prepare(directory, args = [], success = true) {
 test('locked preparation is offline, lifecycle-free, and idempotently reuses verified dependencies', async (t) => {
   const { source } = await fixture(t);
   assert.match(prepare(source).stdout, /Preparing locked dependencies/);
+  await write(source, 'node_modules/uri-js/yarn.lock', '# Synthetic packaged declarative manifest.\n');
   await write(source, 'node_modules/reuse-proof', 'retain this installed tree');
   const before = await fs.readFile(path.join(source, receipt));
   const result = prepare(source);
@@ -131,6 +132,7 @@ test(
     run('git', ['config', 'user.email', 'fixture@example.invalid'], source);
     run('git', ['config', 'user.name', 'Fixture'], source);
     prepare(source);
+    await write(source, 'node_modules/uri-js/yarn.lock', '# Synthetic packaged declarative manifest.\n');
     await write(source, 'node_modules/reuse-proof', 'source dependency');
     // Synthetic fixtures only: none of these contents are read back.
     const privatePaths = [
@@ -169,7 +171,7 @@ test(
       process.execPath,
       '--',
       '-e',
-      "require('node:fs').accessSync('node_modules/fixture-package/package.json')",
+      "require('node:fs').accessSync('node_modules/uri-js/yarn.lock')",
     ]);
     assert.match(created.stdout + created.stderr, /Reused verified dependencies without an install or download/);
     assert.equal(await fs.readFile(path.join(warm, 'node_modules/reuse-proof'), 'utf8'), 'source dependency');
@@ -191,7 +193,7 @@ test(
       await write(source, receipt, JSON.stringify(changed));
       const result = prepare(preview, ['--from', source, '--dry-run']);
       assert.match(result.stdout, /Copying cache only/);
-      assert.doesNotMatch(result.stdout, /reuse-proof|fixture-package\/package\.json/);
+      assert.doesNotMatch(result.stdout, /reuse-proof|uri-js\/package\.json/);
     }
     // An incompatible source still supplies download data, then npm prepares a new tree offline.
     const cold = prepare(preview, ['--from', source]);
@@ -217,10 +219,7 @@ test(
     assert.match(prepare(unsafe, ['--from', source], false).stderr, /Refusing dependency\/cache symlinks/);
     await assert.rejects(fs.access(path.join(unsafe, 'node_modules')), { code: 'ENOENT' });
     await fs.unlink(path.join(source, 'node_modules/external-link'));
-    await fs.symlink(
-      path.join(source, 'node_modules/fixture-package'),
-      path.join(source, 'node_modules/absolute-link'),
-    );
+    await fs.symlink(path.join(source, 'node_modules/uri-js'), path.join(source, 'node_modules/absolute-link'));
     assert.match(prepare(unsafe, ['--from', source], false).stderr, /Refusing path-bound absolute/);
     await fs.unlink(path.join(source, 'node_modules/absolute-link'));
     // Whole-directory copying cannot filter a nested private/control file.
