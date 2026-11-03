@@ -394,6 +394,11 @@ for (const version of ['1.19.5', '2.2.5'])
     await execute(process.execPath, [cli, 'install', '--dest', installed]);
     const relocated = path.join(f.dir, 'relocated-hardlook');
     await fs.rename(installed, relocated);
+    const configPath = path.join(relocated, 'adapters/opencode', `v${version.split('.')[0]}`, 'config.json');
+    const config = JSON.parse(await fs.readFile(configPath, 'utf8'));
+    const description = `Relocated OpenCode ${version} overlay.`;
+    (config.agents ?? config.agent)['hardlook-peer'].description = description;
+    await fs.writeFile(configPath, JSON.stringify(config));
     const result = await execute(process.execPath, [
       path.join(relocated, 'scripts/hardlook.mjs'),
       'review',
@@ -404,13 +409,14 @@ for (const version of ['1.19.5', '2.2.5'])
       '--intent',
       'Review calculation.',
       '--peer',
-      'opencode:valid',
+      'opencode:overlay-description',
       '--binary',
       `opencode=${f.binaries.opencode}`,
     ]);
     const output = JSON.parse(result.stdout);
     assert.equal(output.status, 'complete');
     assert.equal(output.peers[0].harness_version, version);
+    assert.equal(output.report.summary, description);
   });
 
 test('failed peer, partial coverage, invalid JSON, mutation, and duplicates cannot approve a panel', async (t) => {
