@@ -1,0 +1,126 @@
+[
+  {
+    "generation": 1,
+    "version": "1.19.5",
+    "mode": "deep",
+    "attempt": 0,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 1,
+    "version": "1.19.5",
+    "mode": "deep",
+    "attempt": 1,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 1,
+    "version": "1.19.5",
+    "mode": "deep",
+    "attempt": 2,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 1,
+    "version": "1.19.5",
+    "mode": "routine",
+    "attempt": null,
+    "status": "complete",
+    "served_models": [
+      "fixture"
+    ],
+    "allowed_repo_read_observed": true,
+    "private_literal_read_denied": true,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 2,
+    "version": "2.2.5",
+    "mode": "deep",
+    "attempt": 0,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 2,
+    "version": "2.2.5",
+    "mode": "deep",
+    "attempt": 1,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 2,
+    "version": "2.2.5",
+    "mode": "deep",
+    "attempt": 2,
+    "status": "complete",
+    "served_models": [
+      "fixture",
+      "lead",
+      "peer"
+    ],
+    "allowed_repo_read_observed": false,
+    "private_literal_read_denied": false,
+    "private_content_leaked": false,
+    "skill_denied": false
+  },
+  {
+    "generation": 2,
+    "version": "opencode v2.2.5",
+    "mode": "routine",
+    "attempt": null,
+    "status": "complete",
+    "served_models": [
+      "fixture"
+    ],
+    "allowed_repo_read_observed": true,
+    "private_literal_read_denied": true,
+    "private_content_leaked": false,
+    "skill_denied": true
+  }
+]

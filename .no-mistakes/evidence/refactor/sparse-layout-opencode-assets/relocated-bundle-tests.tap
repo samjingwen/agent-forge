@@ -1,0 +1,11 @@
+✔ relocated bundle supports latest OpenCode 1.19.5 (6342.260042ms)
+✔ relocated bundle supports latest OpenCode 2.2.5 (8908.702167ms)
+✔ installed, relocated fat bundle reviews without the source checkout and refuses overwrite (9586.404958ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 26051.995334

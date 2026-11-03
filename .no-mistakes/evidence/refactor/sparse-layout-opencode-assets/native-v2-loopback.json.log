@@ -1,0 +1,536 @@
+$ node evals/hardlook/opencode-native.mjs --v2-bin /opt/homebrew/bin/opencode
+{
+  "fixture": "opencode-native-loopback-v1",
+  "observations": [
+    {
+      "generation": 2,
+      "attempt": 0,
+      "mode": "deep",
+      "exit_code": 0,
+      "output": {
+        "version": 1,
+        "mode": "deep",
+        "status": "complete",
+        "context_id": "a4dd3b36730e015b8d3ab68743011d73c4fa405b9c273430d8dec29023a98287",
+        "head": "cfd5e5525da8e1ba969ccbeb9c08baf13dc360ab",
+        "base": "37800272a67d08b8844d1b301eeffdad50136834",
+        "changed_paths": [
+          "calc.js"
+        ],
+        "excluded_paths": [],
+        "peers": [
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/fixture",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          },
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/peer",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          }
+        ],
+        "lead": {
+          "harness": "opencode",
+          "requested_model": "local-fixture/lead",
+          "harness_version": "2.2.5",
+          "harness_generation": 2,
+          "report": {
+            "summary": "Native transport fixture.",
+            "risk_level": "low",
+            "risk_rationale": "Disposable fixture.",
+            "reviewed_paths": [
+              "calc.js"
+            ],
+            "findings": []
+          }
+        },
+        "limitations": [],
+        "report": {
+          "summary": "Native transport fixture.",
+          "risk_level": "low",
+          "risk_rationale": "Disposable fixture.",
+          "reviewed_paths": [
+            "calc.js"
+          ],
+          "findings": []
+        }
+      },
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        }
+      ]
+    },
+    {
+      "generation": 2,
+      "attempt": 1,
+      "mode": "deep",
+      "exit_code": 0,
+      "output": {
+        "version": 1,
+        "mode": "deep",
+        "status": "complete",
+        "context_id": "a4dd3b36730e015b8d3ab68743011d73c4fa405b9c273430d8dec29023a98287",
+        "head": "cfd5e5525da8e1ba969ccbeb9c08baf13dc360ab",
+        "base": "37800272a67d08b8844d1b301eeffdad50136834",
+        "changed_paths": [
+          "calc.js"
+        ],
+        "excluded_paths": [],
+        "peers": [
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/fixture",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          },
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/peer",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          }
+        ],
+        "lead": {
+          "harness": "opencode",
+          "requested_model": "local-fixture/lead",
+          "harness_version": "2.2.5",
+          "harness_generation": 2,
+          "report": {
+            "summary": "Native transport fixture.",
+            "risk_level": "low",
+            "risk_rationale": "Disposable fixture.",
+            "reviewed_paths": [
+              "calc.js"
+            ],
+            "findings": []
+          }
+        },
+        "limitations": [],
+        "report": {
+          "summary": "Native transport fixture.",
+          "risk_level": "low",
+          "risk_rationale": "Disposable fixture.",
+          "reviewed_paths": [
+            "calc.js"
+          ],
+          "findings": []
+        }
+      },
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        }
+      ]
+    },
+    {
+      "generation": 2,
+      "attempt": 2,
+      "mode": "deep",
+      "exit_code": 0,
+      "output": {
+        "version": 1,
+        "mode": "deep",
+        "status": "complete",
+        "context_id": "a4dd3b36730e015b8d3ab68743011d73c4fa405b9c273430d8dec29023a98287",
+        "head": "cfd5e5525da8e1ba969ccbeb9c08baf13dc360ab",
+        "base": "37800272a67d08b8844d1b301eeffdad50136834",
+        "changed_paths": [
+          "calc.js"
+        ],
+        "excluded_paths": [],
+        "peers": [
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/fixture",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          },
+          {
+            "harness": "opencode",
+            "requested_model": "local-fixture/peer",
+            "harness_version": "2.2.5",
+            "harness_generation": 2,
+            "report": {
+              "summary": "Native transport fixture.",
+              "risk_level": "low",
+              "risk_rationale": "Disposable fixture.",
+              "reviewed_paths": [
+                "calc.js"
+              ],
+              "findings": []
+            },
+            "status": "ok"
+          }
+        ],
+        "lead": {
+          "harness": "opencode",
+          "requested_model": "local-fixture/lead",
+          "harness_version": "2.2.5",
+          "harness_generation": 2,
+          "report": {
+            "summary": "Native transport fixture.",
+            "risk_level": "low",
+            "risk_rationale": "Disposable fixture.",
+            "reviewed_paths": [
+              "calc.js"
+            ],
+            "findings": []
+          }
+        },
+        "limitations": [],
+        "report": {
+          "summary": "Native transport fixture.",
+          "risk_level": "low",
+          "risk_rationale": "Disposable fixture.",
+          "reviewed_paths": [
+            "calc.js"
+          ],
+          "findings": []
+        }
+      },
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "peer",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "lead",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        }
+      ]
+    },
+    {
+      "generation": 2,
+      "version": "opencode v2.2.5",
+      "exit_code": 0,
+      "status": "complete",
+      "report": {
+        "summary": "Native transport fixture.",
+        "risk_level": "low",
+        "risk_rationale": "Disposable fixture.",
+        "reviewed_paths": [
+          "calc.js"
+        ],
+        "findings": []
+      },
+      "limitations": [],
+      "failures": [],
+      "requests": [
+        {
+          "model": "fixture",
+          "tools": [],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": false,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": false,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": true,
+          "skill_denied": false
+        },
+        {
+          "model": "fixture",
+          "tools": [
+            "glob",
+            "grep",
+            "read",
+            "skill"
+          ],
+          "read_received": true,
+          "private_leaked": false,
+          "skill_loaded": false,
+          "private_denied": true,
+          "skill_denied": true
+        }
+      ]
+    }
+  ]
+}
+
+exit=0

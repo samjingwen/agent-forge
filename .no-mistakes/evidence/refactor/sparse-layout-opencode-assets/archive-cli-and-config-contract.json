@@ -1,0 +1,37 @@
+{
+  "clean_archive_commands": [
+    {
+      "command": "check",
+      "exit_code": 0,
+      "stdout": "Structure OK: 2 skills, 0 Claude bundles, 1 external tool records.\nThis checks structure and packaging inputs. Run native validators and real integration checks for each component.\n",
+      "stderr": ""
+    },
+    {
+      "command": "config:opencode",
+      "exit_code": 0,
+      "stdout": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"skills\": [\n    \"~/.no-mistakes/worktrees/fc088e17c54f/01M6GKMV9XM04D68P46DK6AFGZ/.test-phase-tmp/clean-archive/skills\"\n  ],\n  \"plugins\": []\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": "build:claude",
+      "exit_code": 0,
+      "stdout": "No Claude bundles configured. Nothing was generated.\n",
+      "stderr": ""
+    }
+  ],
+  "no_directories_created": true,
+  "native_config_byte_contracts": [
+    {
+      "asset": "skills/hardlook/adapters/opencode/v1/config.json",
+      "sha256": "d083a66ecef3a80ea9e439718be28b912585a1ae9c50388818e47a955373bec4",
+      "base_and_head_git_mode": "100644",
+      "byte_identical": true
+    },
+    {
+      "asset": "skills/hardlook/adapters/opencode/v2/config.json",
+      "sha256": "f5486a5f4784256f2f22a0831db1dfe60afef997073433ed072ac46f28cec2d2",
+      "base_and_head_git_mode": "100644",
+      "byte_identical": true
+    }
+  ]
+}

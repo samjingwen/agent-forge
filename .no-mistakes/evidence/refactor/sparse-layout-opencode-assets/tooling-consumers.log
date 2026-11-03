@@ -1,0 +1,33 @@
+$ node --test tests/tooling/layout.test.mjs tests/tooling/packaging.test.mjs
+✔ sparse checkout runs every tooling entrypoint without creating optional scaffolding (3338.342875ms)
+✔ optional path plugins rejects a present file (3241.506541ms)
+✔ optional path plugins rejects a present symlink (1101.489333ms)
+✔ optional path plugins/opencode rejects a present file (3415.494875ms)
+✔ optional path plugins/opencode rejects a present symlink (5607.807416ms)
+✔ optional path plugins/claude-code rejects a present file (2975.470708ms)
+✔ optional path plugins/claude-code rejects a present symlink (1366.442375ms)
+✔ optional path mcp-servers rejects a present file (1492.30125ms)
+✔ optional path mcp-servers rejects a present symlink (3913.55475ms)
+✔ optional path packages rejects a present file (2223.372333ms)
+✔ optional path packages rejects a present symlink (2824.743209ms)
+✔ required directory skills is still enforced (1507.396ms)
+✔ required directory catalog is still enforced (584.498ms)
+✔ required directory config is still enforced (404.802ms)
+✔ required directory evals is still enforced (687.586541ms)
+✔ OpenCode configuration still discovers sorted real plugin entrypoints (654.729833ms)
+✔ a declared Claude bundle still requires its real wrapper source (2532.025083ms)
+✔ a configured Claude wrapper packages without unrelated optional roots (1805.816708ms)
+✔ an empty catalog still refuses existing publication output in a sparse checkout (1445.58425ms)
+✔ current marketplace identity rebuilds legacy-owned distribution without changing its ownership protocol (2184.04675ms)
+✔ unowned distribution is refused and preserved after the rename (867.709042ms)
+✔ legacy CLI entrypoint resolves resources from its own checkout rather than the caller directory (1206.862542ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 42385.780375
+
+exit=0

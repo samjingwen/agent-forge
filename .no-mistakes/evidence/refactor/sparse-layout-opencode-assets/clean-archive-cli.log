@@ -1,0 +1,27 @@
+Clean target Git archive extracted inside disposable worktree directory.
+$ node ~/.no-mistakes/worktrees/fc088e17c54f/01M6GKMV9XM04D68P46DK6AFGZ/.test-phase/archive/tooling/agent-toolkit.mjs check
+Structure OK: 2 skills, 0 Claude bundles, 1 external tool records.
+This checks structure and packaging inputs. Run native validators and real integration checks for each component.
+
+
+exit=0
+$ node ~/.no-mistakes/worktrees/fc088e17c54f/01M6GKMV9XM04D68P46DK6AFGZ/.test-phase/archive/tooling/agent-toolkit.mjs config:opencode
+{
+  "$schema": "https://opencode.ai/config.json",
+  "skills": [
+    "~/.no-mistakes/worktrees/fc088e17c54f/01M6GKMV9XM04D68P46DK6AFGZ/.test-phase/archive/skills"
+  ],
+  "plugins": []
+}
+
+
+exit=0
+$ node ~/.no-mistakes/worktrees/fc088e17c54f/01M6GKMV9XM04D68P46DK6AFGZ/.test-phase/archive/tooling/agent-toolkit.mjs build:claude
+No Claude bundles configured. Nothing was generated.
+
+
+exit=0
+Optional component roots remain absent after all three CLI consumers.
+Native config byte/permission contract: config.json -> v1/config.json; sha256=d083a66ecef3a80ea9e439718be28b912585a1ae9c50388818e47a955373bec4; mode=100644
+Native config byte/permission contract: config-v2.json -> v2/config.json; sha256=f5486a5f4784256f2f22a0831db1dfe60afef997073433ed072ac46f28cec2d2; mode=100644
+Installed manifest contract: Hardlook 0.3.1; private root package and lockfile byte-identical to base.

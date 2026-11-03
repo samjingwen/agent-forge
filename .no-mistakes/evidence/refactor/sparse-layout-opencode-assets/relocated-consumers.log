@@ -1,0 +1,21 @@
+$ node --test --test-name-pattern=relocated bundle supports latest OpenCode|installed, relocated fat bundle|latest OpenCode V|OpenCode .*deep peers|OpenCode V2 variant|OpenCode .*across directories tests/hardlook/hardlook.test.mjs
+✔ latest OpenCode V1 uses its own launch and permission contract (9933.454625ms)
+✔ latest OpenCode V2 uses its own launch and permission contract (11457.754083ms)
+✔ OpenCode 1.19.5 deep peers avoid shared-state contention (10548.853ms)
+✔ OpenCode 2.2.5 deep peers avoid shared-state contention (11992.65075ms)
+✔ OpenCode V2 variant selectors reach the CLI unchanged (4290.488916ms)
+✔ OpenCode 1.19.5 peers and leads read the reviewed repo across directories (8508.691625ms)
+✔ OpenCode 2.2.5 peers and leads read the reviewed repo across directories (7241.562333ms)
+✔ relocated bundle supports latest OpenCode 1.19.5 (7370.129167ms)
+✔ relocated bundle supports latest OpenCode 2.2.5 (4505.882334ms)
+✔ installed, relocated fat bundle reviews without the source checkout and refuses overwrite (7088.599792ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 84519.643583
+
+exit=0
