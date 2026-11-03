@@ -1,0 +1,7 @@
+# Blocking: dependencies must be ready before post-start hooks or --execute.
+[pre-start]
+dependencies = "node tooling/worktree-dependencies.mjs --from {{ primary_worktree_path }}"
+
+[step.copy-ignored]
+# Defense in depth if an allowlisted dependency contains local state.
+exclude = ["**/.env", "**/.env.*", "**/.npmrc", "**/*.lock", "**/*.pid", "**/*.sock", "**/*.sqlite*", "**/*.db", "node_modules/.cache/"]

@@ -99,6 +99,8 @@ npm run build:claude
 Development dependencies use exact version pins and come from `package-lock.json`.
 The installed skill does not depend on them.
 You can use `pnpm run` for the same scripts.
+For new Worktrunk worktrees, see [dependency and download-cache reuse](docs/worktrees.md).
+The blocking setup hook reuses compatible ignored dependencies without sharing writable directories or copying private/runtime state.
 
 For Hardlook alone, run `npm run test:hardlook`.
 For metadata-only harness availability checks, run `npm run doctor:hardlook`.

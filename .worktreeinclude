@@ -1,0 +1,15 @@
+# Only root npm dependencies and immutable/integrity-checked npm download data.
+/node_modules/
+/.cache/npm/_cacache/content-v2/
+/.cache/npm/_cacache/index-v5/
+
+# Defense in depth; the setup helper also checks whole-directory contents.
+!**/.env
+!**/.env.*
+!**/.npmrc
+!**/*.lock
+!**/*.pid
+!**/*.sock
+!**/*.sqlite*
+!**/*.db
+!/node_modules/.cache/

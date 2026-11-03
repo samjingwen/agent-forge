@@ -12,6 +12,7 @@
     "node": ">=22.13.0"
   },
   "scripts": {
+    "deps:prepare": "node tooling/worktree-dependencies.mjs",
     "check": "node tooling/agent-toolkit.mjs check",
     "lint": "eslint . --max-warnings 0",
     "format:check": "prettier --check \"**/*.{js,mjs,cjs,jsx,ts,tsx,mts,cts}\"",
@@ -19,6 +20,7 @@
     "quality": "npm run lint && npm run format:check",
     "test": "node --test tests/*/*.test.mjs",
     "test:quality": "node --test tests/quality/*.test.mjs",
+    "test:worktrunk": "wt --version && node --test tests/tooling/worktree-dependencies.test.mjs",
     "test:hardlook": "node --test tests/hardlook/*.test.mjs",
     "test:plainspoken": "node --test tests/plainspoken/*.test.mjs",
     "lint:plainspoken": "python3 skills/plainspoken/scripts/ste-lint.py",
