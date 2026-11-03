@@ -5,10 +5,8 @@ import path from 'node:path';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { parse } from 'yaml';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
-const { commands } = parse(await fs.readFile(path.join(root, '.no-mistakes.yaml'), 'utf8'));
 const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
 function run(binary, args, cwd) {
@@ -29,11 +27,8 @@ function run(binary, args, cwd) {
   return result;
 }
 
-function hook(command, cwd) {
-  assert.equal(typeof command, 'string');
-  return process.platform === 'win32'
-    ? run('cmd.exe', ['/d', '/s', '/c', command], cwd)
-    : run('sh', ['-c', command], cwd);
+function script(name, cwd) {
+  return run(npm, ['run', '--silent', name], cwd);
 }
 
 async function temporary(t) {
@@ -53,17 +48,17 @@ async function fixture(t) {
   return directory;
 }
 
-test('configured quality hook executes ESLint and Prettier successfully on conforming Node ESM', async (t) => {
+test('quality script executes ESLint and Prettier successfully on conforming Node ESM', async (t) => {
   const directory = await fixture(t);
   await fs.writeFile(path.join(directory, 'tooling/example.mjs'), 'export const pid = process.pid;\n');
-  const result = hook(commands.lint, directory);
+  const result = script('quality', directory);
   assert.equal(result.status, 0, result.stdout + result.stderr);
 });
 
 test('CommonJS receives its runtime globals but ESM cannot accidentally use require', async (t) => {
   const directory = await fixture(t);
   await fs.writeFile(path.join(directory, 'tooling/common.cjs'), 'module.exports = process.pid;\n');
-  const conforming = hook(commands.lint, directory);
+  const conforming = script('quality', directory);
   assert.equal(conforming.status, 0, conforming.stdout + conforming.stderr);
   await fs.writeFile(path.join(directory, 'tooling/example.mjs'), "export const fs = require('node:fs');\n");
   const rejected = run(npm, ['run', '--silent', 'lint', '--', '--format', 'json'], directory);
@@ -121,12 +116,12 @@ test('strict comparison and excessive nesting fail real lint consumers', async (
   assert.ok(rules.has('max-depth'));
 });
 
-test('quality hook fails erroneous code without modifying it', async (t) => {
+test('quality script fails erroneous code without modifying it', async (t) => {
   const directory = await fixture(t);
   const file = path.join(directory, 'tooling/example.mjs');
   const input = 'export const answer = missingValue;\n';
   await fs.writeFile(file, input);
-  const result = hook(commands.lint, directory);
+  const result = script('quality', directory);
   assert.equal(result.status, 1, result.stdout + result.stderr);
   assert.equal(await fs.readFile(file, 'utf8'), input);
 });
@@ -139,14 +134,14 @@ test('format checks fail without mutation; the separate configured formatter fix
   const checked = run(npm, ['run', '--silent', 'format:check'], directory);
   assert.equal(checked.status, 1, checked.stdout + checked.stderr);
   assert.equal(await fs.readFile(file, 'utf8'), input);
-  const quality = hook(commands.lint, directory);
+  const quality = script('quality', directory);
   assert.equal(quality.status, 1, quality.stdout + quality.stderr);
   assert.equal(await fs.readFile(file, 'utf8'), input);
-  const fixed = hook(commands.format, directory);
+  const fixed = script('format', directory);
   assert.equal(fixed.status, 0, fixed.stdout + fixed.stderr);
   // The independently specified formatted artifact is this fixture's public output contract.
   assert.equal(await fs.readFile(file, 'utf8'), 'export const answer = 42;\n');
-  const rechecked = hook(commands.lint, directory);
+  const rechecked = script('quality', directory);
   assert.equal(rechecked.status, 0, rechecked.stdout + rechecked.stderr);
 });
 
@@ -164,7 +159,7 @@ test('generated distribution and build output are excluded, not the maintained s
     await fs.mkdir(path.dirname(path.join(directory, file)), { recursive: true });
     await fs.writeFile(path.join(directory, file), 'this is deliberately invalid JavaScript !!!\n');
   }
-  const result = hook(commands.lint, directory);
+  const result = script('quality', directory);
   assert.equal(result.status, 0, result.stdout + result.stderr);
 });
 
@@ -172,9 +167,9 @@ test('private environment filenames are not parsed as maintained JavaScript', as
   const directory = await fixture(t);
   // Synthetic input only; neither this test nor the tools read its contents back.
   await fs.writeFile(path.join(directory, '.env.fixture.mjs'), 'deliberately invalid JavaScript !!!\n');
-  const result = hook(commands.lint, directory);
+  const result = script('quality', directory);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  const formatted = hook(commands.format, directory);
+  const formatted = script('format', directory);
   assert.equal(formatted.status, 0, formatted.stdout + formatted.stderr);
 });
 
@@ -189,13 +184,13 @@ test('formatting leaves non-JavaScript upstream byte contracts untouched', async
     await fs.mkdir(path.dirname(path.join(directory, file)), { recursive: true });
     await fs.writeFile(path.join(directory, file), contents);
   }
-  const result = hook(commands.format, directory);
+  const result = script('format', directory);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   for (const [file, contents] of Object.entries(files))
     assert.equal(await fs.readFile(path.join(directory, file), 'utf8'), contents);
 });
 
-test('configured preparation runs npm ci without lifecycle scripts and rejects an invalid lockfile', async (t) => {
+test('direct preparation runs npm ci without lifecycle scripts and rejects an invalid lockfile', async (t) => {
   const directory = await temporary(t);
   const packageJSON = {
     name: 'quality-prepare-fixture',
@@ -214,10 +209,10 @@ test('configured preparation runs npm ci without lifecycle scripts and rejects a
       packages: { '': { name: packageJSON.name, version: packageJSON.version, hasInstallScript: true } },
     }),
   );
-  const prepared = hook(commands.prepare, directory);
+  const prepared = run(npm, ['ci', '--ignore-scripts'], directory);
   assert.equal(prepared.status, 0, prepared.stdout + prepared.stderr);
   await assert.rejects(fs.access(path.join(directory, 'lifecycle-ran')));
   await fs.writeFile(path.join(directory, 'package-lock.json'), 'not a lockfile');
-  const rejected = hook(commands.prepare, directory);
+  const rejected = run(npm, ['ci', '--ignore-scripts'], directory);
   assert.notEqual(rejected.status, 0);
 });

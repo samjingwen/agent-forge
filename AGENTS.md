@@ -1,6 +1,8 @@
 # Working in Agent Forge
 
 This repository contains reusable agent tooling with separately installable components.
+Follow the repository-owned [change delivery policy](.opencode/instructions/change-delivery.md).
+The no-mistakes repository gate is retired; do not restore its configuration or initialize a new gate.
 
 - Read README.md and the relevant component's documentation before changing it.
 - For Hardlook work, read docs/hardlook/development.md and preserve its self-contained skill boundary.

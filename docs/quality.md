@@ -14,7 +14,7 @@ Installed Hardlook helpers still require Node 22 or later and Git, without npm r
 No global runtime or settings change is required.
 Use `npm ci --ignore-scripts` to materialize the exact development dependencies from `package-lock.json`.
 
-ESLint, its recommended rules, Node globals, Prettier, and the YAML parser used by hook-consumer tests are exact-pinned development dependencies.
+ESLint, its recommended rules, Node globals, Prettier, and the YAML parser used by skill-metadata tests are exact-pinned development dependencies.
 ESLint 10 does not support early Node 22 releases; unsupported ESLint 9 is not used to retain that older development floor.
 Do not install Java tooling or Ruff without actual maintained source that needs them.
 An upstream-pinned Python helper is not maintained project Python merely because it is bundled in a skill.
@@ -27,7 +27,7 @@ An upstream-pinned Python helper is not maintained project Python merely because
 | `npm run format:check` | Non-mutating Prettier check of JavaScript and TypeScript file extensions. |
 | `npm run quality` | Both lint and formatting checks, with failure propagated. |
 | `npm run format` | Separate formatting fix for those same extensions; review its diff. |
-| `npm run test:quality` | Behavioral tests that invoke the actual tools and configured hooks. |
+| `npm run test:quality` | Behavioral tests that invoke the actual npm scripts and tools. |
 | `npm test` | Quality and packaging consumers plus both skills' behavior and relocation tests. |
 
 Prettier owns layout: two-space indentation, single quotes, semicolons, LF endings, and a 120-column print width.
@@ -48,29 +48,25 @@ Canonical skill scripts and wrapper/package sources remain checked.
 Schemas, Markdown prompts, license notices, and non-JavaScript pinned assets are not selected by the formatting command.
 Do not run a broad formatter over upstream byte contracts or hand-edit generated distribution to satisfy a check.
 
-## CI and no-mistakes
+## CI and direct delivery
 
 The existing Linux/macOS workflow runs locked dependency preparation, `npm run quality`, structural checks, and the complete regression suite.
 It retains the existing job names and does not create a publication or deployment target.
 
-The root `.no-mistakes.yaml` provides supported `commands.prepare`, `commands.lint`, and `commands.format` hooks using the same entrypoints.
-`commands.test` is deliberately unset: the gate derives targeted Test scenarios rather than duplicating the broad CI suite there.
-There is no `lint.commands` block and no per-branch command-trust opt-in.
-
-This repository did not have an initialized local no-mistakes gate when this rollout began.
-The tooling change does not initialize a Git proxy or change global gate settings.
-The proposed hook file cannot enforce its own bootstrap review: gate-control commands are normally read from the trusted default branch.
-Only after a reviewed merge and explicit gate initialization can later runs consume these trusted hooks.
-An existing active gate must not be restarted or retrofitted to make new hooks take effect.
+The user retired the repository's no-mistakes Git proxy and command configuration.
+Run the documented npm commands directly, review the intended diff with Hardlook, and use protected GitHub pull requests.
+Follow the repository-owned [change delivery policy](../.opencode/instructions/change-delivery.md).
+Do not initialize another no-mistakes gate or restore its configuration.
+Hardlook's portable optional no-mistakes integration assets remain component functionality, not an active gate for this repository.
 
 ## Verification evidence and limits
 
-The tests parse the YAML command mapping and execute its actual shell hooks in disposable fixtures.
+The tests execute the actual package scripts and npm preparation command in disposable fixtures.
 They prove that conforming code passes, undefined names and excessive nesting fail ESLint, formatting drift fails without mutation, and the separate formatter produces the specified output.
-They also execute the preparation hook with a valid and invalid npm lockfile and verify lifecycle scripts stay disabled.
+They also execute `npm ci --ignore-scripts` with a valid and invalid npm lockfile and verify lifecycle scripts stay disabled.
 Generated-output fixtures deliberately contain invalid JavaScript, while maintained-surface fixtures prove those sources remain enforced.
 Pinned non-JavaScript fixture bytes must remain unchanged by formatting.
 
 These are executable consumer tests, not assertions that configuration contains tool names.
-They do not claim that an uninitialized no-mistakes daemon executed a pipeline, that a formatter proves runtime correctness, or that AI review replaces these checks.
+They do not claim that a formatter proves runtime correctness or that AI review replaces these checks.
 Hardlook's own tests and a clean packaged installation verify that development tooling does not become a skill runtime dependency.
