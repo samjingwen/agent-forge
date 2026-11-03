@@ -70,18 +70,11 @@ async function checkCopyTree(dir) {
 }
 
 async function inspect() {
-  for (const relative of [
-    'skills',
-    'plugins',
-    'plugins/opencode',
-    'plugins/claude-code',
-    'mcp-servers',
-    'packages',
-    'catalog',
-    'config',
-    'evals',
-  ]) {
+  for (const relative of ['skills', 'catalog', 'config', 'evals']) {
     await directory(at(relative));
+  }
+  for (const relative of ['plugins', 'plugins/opencode', 'plugins/claude-code', 'mcp-servers', 'packages']) {
+    await directory(at(relative), true);
   }
   const catalog = await readJSON(at('catalog/claude-bundles.json'));
   const external = await readJSON(at('catalog/external-tools.json'));
@@ -239,7 +232,10 @@ async function buildClaude() {
 async function opencodeConfig() {
   await inspect();
   const plugins = [];
-  for (const entry of await fs.readdir(at('plugins/opencode'), { withFileTypes: true })) {
+  const entries = (await directory(at('plugins/opencode'), true))
+    ? await fs.readdir(at('plugins/opencode'), { withFileTypes: true })
+    : [];
+  for (const entry of entries) {
     if (!entry.isDirectory() || entry.name.startsWith('.')) continue;
     const base = at('plugins/opencode', entry.name);
     for (const candidate of ['package.json', 'index.ts', 'index.js']) {

@@ -87,6 +87,10 @@ const report = {
   findings: [],
 };
 if (model === 'valid#high') report.summary = 'Variant selector arrived unchanged.';
+if (model === 'overlay-description') {
+  const overlay = JSON.parse(process.env.OPENCODE_CONFIG_CONTENT);
+  report.summary = (overlay.agents ?? overlay.agent)['hardlook-peer'].description;
+}
 if (model === 'supporting-read') report.summary = fs.readFileSync('supporting.txt', 'utf8');
 if (model === 'finding' || model === 'null-reproduction' || model.startsWith('repro-'))
   report.findings.push({

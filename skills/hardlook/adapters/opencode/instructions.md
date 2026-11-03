@@ -29,8 +29,11 @@ The helper probes the selected binary with `--version` and chooses a generation-
 
 | Generation | Config | Launch |
 | --- | --- | --- |
-| V1 | `config.json`: `agent`, `prompt`, permission map | `opencode run --format json --agent hardlook-peer` |
-| V2 | `config-v2.json`: `agents`, `system`, ordered permissions | `opencode run --standalone --format json --agent hardlook-peer` |
+| V1 | `v1/config.json`: `agent`, `prompt`, permission map | `opencode run --format json --agent hardlook-peer` |
+| V2 | `v2/config.json`: `agents`, `system`, ordered permissions | `opencode run --standalone --format json --agent hardlook-peer` |
+
+The versioned directories contain only generation-specific assets; instructions, commands, and review logic remain shared.
+These bundled paths do not rename or isolate OpenCode's global configuration, executable, or runtime state.
 
 V2 requires a private server so the invocation's overlay reaches the reviewer instead of being lost against an existing shared service.
 Both overlays deny mutations, shell, delegation, skill loading, network, Code Mode, and MCP actions, while allowing local read/search operations with best-effort literal private-path read masks.

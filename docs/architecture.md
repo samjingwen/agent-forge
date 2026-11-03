@@ -6,6 +6,12 @@ The monorepo is a development boundary.
 Each installed plugin or running MCP server has its own runtime boundary.
 Shared source belongs in `skills/` and `packages/`; integration code belongs in the corresponding plugin or server directory.
 
+The repository tracks real content rather than empty directory placeholders.
+`plugins/`, its `opencode/` and `claude-code/` children, `mcp-servers/`, and `packages/` are optional until implementations exist.
+If present, each must remain a real directory rather than a file or symlink.
+The structural check still requires `skills/`, `catalog/`, `config/`, and `evals/`, and validates catalog-declared bundle sources even when other optional roots are absent.
+OpenCode configuration generation emits an empty plugin list when no OpenCode plugin directory exists; it does not create one.
+
 Canonical skills should follow the [Agent Skills specification](https://agentskills.io/specification).
 Keep runtime-specific features in adapters when their behavior differs.
 An OpenCode plugin and a Claude Code plugin are separate formats even when they expose the same underlying capability.
@@ -13,6 +19,8 @@ An OpenCode plugin and a Claude Code plugin are separate formats even when they 
 Hardlook is a self-contained skill, not a native plugin.
 Its runtime helpers and harness adapters stay in `skills/hardlook/` so a skill-only install remains complete.
 Its maintainer documentation, tests, and evaluations live in `docs/hardlook/`, `tests/hardlook/`, and `evals/hardlook/`.
+Hardlook's native OpenCode overlays live in `skills/hardlook/adapters/opencode/v1/config.json` and `v2/config.json`, alongside shared adapter instructions and command assets.
+This source layout does not split the shared review implementation or change either OpenCode generation's own configuration/state locations.
 
 Plainspoken follows the same self-contained skill boundary in `skills/plainspoken/`.
 Its optional Python linter has no third-party dependencies and remains bundled with its references, examples, and upstream license.

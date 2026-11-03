@@ -8,6 +8,8 @@ Reproduction contract tests exercise all five native-shaped adapter outputs, opt
 Deep synthesis tests retain a lone peer's unverified observation but reject invented output, changed commands/expectations, and unrun checks promoted to observed results.
 Pipeline conversion preserves exact reported strings and status in the existing description field, and installed/relocated bundle tests exercise the new report contract.
 These deterministic fixtures prove helper enforcement, not that real models reliably follow the evidence rubric.
+Relocated OpenCode bundle tests load and modify each installed `adapters/opencode/v1/config.json` or `v2/config.json`, then verify the emitted native overlay reaches the reviewer fixture.
+This checks that the installed helper actually uses the versioned bundle assets, not the source checkout or obsolete flat paths.
 
 Real model review is development-only and opt-in:
 
