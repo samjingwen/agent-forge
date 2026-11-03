@@ -108,7 +108,7 @@ Use `npm run lint:plainspoken -- --json <file>` to check a selected text file wi
 
 `npm run quality` checks without changing files.
 `npm run format` is the separate formatting fix.
-See [code quality](docs/quality.md) for language coverage, ownership exclusions, CI, and the trusted-default-branch no-mistakes hook boundary.
+See [code quality](docs/quality.md) for language coverage, ownership exclusions, CI, and direct project verification.
 
 `check` performs basic layout, JSON, catalog, and path checks.
 It also checks that each discovered skill folder contains `SKILL.md`.
