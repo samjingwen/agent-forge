@@ -19,4 +19,11 @@ __pycache__/
 *.local.json
 *.local.jsonc
 .cache/
+# Let Worktrunk discover the allowlisted npm data subtrees, not one opaque .cache/.
+!/.cache/
+/.cache/*
+!/.cache/npm/
+/.cache/npm/*
+!/.cache/npm/_cacache/
+/.cache/npm/_cacache/*
 # distribution/ is deliberately tracked: marketplace installs need those files.
