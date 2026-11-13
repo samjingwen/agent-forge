@@ -126,7 +126,7 @@ test(
   async (t) => {
     const { source, directory } = await fixture(t);
     const userConfig = path.join(directory, 'wt-user.toml');
-    await fs.writeFile(userConfig, '');
+    await fs.writeFile(userConfig, 'worktree-path = "{{ repo_path }}/.worktrees/{{ branch | sanitize }}"\n');
     const worktrunk = (args) => run('wt', ['--config', userConfig, ...args], source);
     run('git', ['init', '-b', 'master'], source);
     run('git', ['config', 'user.email', 'fixture@example.invalid'], source);
@@ -152,20 +152,20 @@ test(
     run('git', ['add', '.'], source);
     run('git', ['add', '--force', '.worktreeinclude'], source);
     run('git', ['commit', '-m', 'Disposable Worktrunk fixture'], source);
-    const preview = path.join(directory, 'preview');
-    worktrunk(['switch', '--create', 'preview', '--path', preview, '--no-hooks']);
+    assert.equal(run('git', ['check-ignore', '--quiet', '.worktrees/probe'], source).status, 0);
+    const preview = path.join(source, '.worktrees', 'preview-layout');
+    const previewResult = worktrunk(['switch', '--create', 'preview/layout', '--no-hooks', '--format=json']);
+    assert.equal(await fs.realpath(JSON.parse(previewResult.stdout).path), await fs.realpath(preview));
     const dryRun = prepare(preview, ['--from', source, '--dry-run']);
     assert.match(dryRun.stdout, /node_modules/);
     assert.doesNotMatch(dryRun.stdout, /synthetic-private|\.env|control\.db|in-use\.lock|session\.log/);
     await assert.rejects(fs.access(path.join(preview, 'node_modules')), { code: 'ENOENT' });
 
-    const warm = path.join(directory, 'warm');
+    const warm = path.join(source, '.worktrees', 'warm-layout');
     const created = worktrunk([
       'switch',
       '--create',
-      'warm',
-      '--path',
-      warm,
+      'warm/layout',
       '--yes',
       '--execute',
       process.execPath,
@@ -174,6 +174,7 @@ test(
       "require('node:fs').accessSync('node_modules/uri-js/yarn.lock')",
     ]);
     assert.match(created.stdout + created.stderr, /Reused verified dependencies without an install or download/);
+    assert.equal((await fs.lstat(warm)).isDirectory(), true);
     assert.equal(await fs.readFile(path.join(warm, 'node_modules/reuse-proof'), 'utf8'), 'source dependency');
     for (const file of privatePaths) await assert.rejects(fs.access(path.join(warm, file)), { code: 'ENOENT' }, file);
     assert.equal((await fs.lstat(path.join(warm, 'node_modules'))).isSymbolicLink(), false);

@@ -15,6 +15,17 @@ npm run deps:prepare
 wt switch --create my-change
 ```
 
+Configure the user-level Worktrunk path template to create new worktrees at `<repository>/.worktrees/<sanitized-branch>`:
+
+```toml
+worktree-path = "{{ repo_path }}/.worktrees/{{ branch | sanitize }}"
+```
+
+Worktrunk v0.81 accepts `worktree-path` only in user configuration, not project-owned `.config/wt.toml`.
+The repository-local path keeps each project's worktrees together, while `.config/wt.toml` continues to own Agent Forge's dependency hook.
+Existing worktrees are not moved automatically.
+The repository ignores `/.worktrees/`, and Worktrunk excludes that tool-state directory from dependency-copy discovery.
+
 The project-owned `.config/wt.toml` runs preparation in a blocking `pre-start` hook.
 Copying and dependency verification finish before Worktrunk launches any `post-start` hook or `--execute` command.
 No application, watcher, service, model, or cloud runner is started.
