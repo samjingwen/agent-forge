@@ -10,19 +10,23 @@ const root = fileURLToPath(new URL('../../', import.meta.url));
 const script = 'tooling/worktree-dependencies.mjs';
 const receipt = 'node_modules/.agent-forge-dependencies.json';
 const hasWorktrunk = spawnSync('wt', ['--version']).status === 0;
+const inheritedEnvironment = Object.fromEntries(
+  Object.entries(process.env).filter(([key]) => !key.startsWith('WORKTRUNK_')),
+);
 
-function run(binary, args, cwd, success = true) {
+function run(binary, args, cwd, success = true, environment = {}) {
   const result = spawnSync(binary, args, {
     cwd,
     encoding: 'utf8',
     timeout: 60_000,
     env: {
-      ...process.env,
+      ...inheritedEnvironment,
       NPM_CONFIG_OFFLINE: 'true',
       NPM_CONFIG_AUDIT: 'false',
       NPM_CONFIG_FUND: 'false',
       // Every test has a disposable download cache; do not touch user npm state.
       NPM_CONFIG_CACHE: path.join(cwd, '.cache/npm'),
+      ...environment,
     },
   });
   assert.ifError(result.error);
@@ -126,8 +130,14 @@ test(
   async (t) => {
     const { source, directory } = await fixture(t);
     const userConfig = path.join(directory, 'wt-user.toml');
+    const systemConfig = path.join(directory, 'wt-system.toml');
     await fs.writeFile(userConfig, 'worktree-path = "{{ repo_path }}/.worktrees/{{ branch | sanitize }}"\n');
-    const worktrunk = (args) => run('wt', ['--config', userConfig, ...args], source);
+    await fs.writeFile(systemConfig, '');
+    const worktrunkEnvironment = {
+      WORKTRUNK_CONFIG_PATH: userConfig,
+      WORKTRUNK_SYSTEM_CONFIG_PATH: systemConfig,
+    };
+    const worktrunk = (args) => run('wt', args, source, true, worktrunkEnvironment);
     run('git', ['init', '-b', 'master'], source);
     run('git', ['config', 'user.email', 'fixture@example.invalid'], source);
     run('git', ['config', 'user.name', 'Fixture'], source);
