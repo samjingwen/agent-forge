@@ -81,8 +81,8 @@ async function fixture(t) {
   return { directory, source };
 }
 
-function prepare(directory, args = [], success = true) {
-  return run(process.execPath, [script, ...args], directory, success);
+function prepare(directory, args = [], success = true, environment = {}) {
+  return run(process.execPath, [script, ...args], directory, success, environment);
 }
 
 test('locked preparation is offline, lifecycle-free, and idempotently reuses verified dependencies', async (t) => {
@@ -120,6 +120,37 @@ test('preparation refuses writable dependency or cache paths redirected through 
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /Refusing non-directory or symlink/);
   assert.deepEqual(await fs.readdir(outside), []);
+});
+
+test('copy validation rejects escaping directory symlinks without traversing them', async (t) => {
+  const { source, directory } = await fixture(t);
+  prepare(source);
+  const destination = path.join(directory, 'destination');
+  await fs.mkdir(destination);
+  for (const file of [script, '.worktreeinclude', 'package.json', 'package-lock.json']) {
+    await write(destination, file, await fs.readFile(path.join(source, file)));
+  }
+  const binaries = path.join(directory, 'bin');
+  const marker = path.join(directory, 'wt-called');
+  await write(
+    binaries,
+    'wt',
+    '#!/usr/bin/env node\nrequire("node:fs").writeFileSync(process.env.WT_MARKER, "called");\n',
+  );
+  await fs.chmod(path.join(binaries, 'wt'), 0o755);
+  const environment = { PATH: `${binaries}${path.delimiter}${process.env.PATH}`, WT_MARKER: marker };
+  const link = path.join(source, 'node_modules/directory-link');
+  await fs.symlink(path.relative(path.dirname(link), directory), link);
+  const rejected = prepare(destination, ['--from', source, '--dry-run'], false, environment);
+  assert.notEqual(rejected.status, 0);
+  assert.match(rejected.stderr, /Refusing dependency\/cache symlinks/);
+  await assert.rejects(fs.access(path.join(destination, 'node_modules')), { code: 'ENOENT' });
+  await assert.rejects(fs.access(marker), { code: 'ENOENT' });
+  await fs.unlink(link);
+  await fs.symlink('uri-js', link);
+  const accepted = prepare(destination, ['--from', source, '--dry-run'], true, environment);
+  assert.match(accepted.stdout, /Copying compatible npm dependencies/);
+  assert.equal(await fs.readFile(marker, 'utf8'), 'called');
 });
 
 test(

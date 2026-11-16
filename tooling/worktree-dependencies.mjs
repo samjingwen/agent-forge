@@ -86,35 +86,41 @@ async function compatible(directory, expected) {
 async function safeTree(directory, relative) {
   const base = path.join(directory, relative);
   if (!(await info(base))) return;
-  const entries = await fs.readdir(base, { recursive: true, withFileTypes: true });
-  for (const entry of entries) {
-    // Worktrunk v0.81 copies ignored directories as units. Do not rely on
-    // descendant exclusion patterns to sanitize a selected directory.
-    const name = entry.name;
-    // uri-js ships this declarative package manifest; it is not an in-use lock.
-    const packagedLock =
-      relative === 'node_modules' &&
-      entry.isFile() &&
-      path.relative(base, path.join(entry.parentPath, name)) === path.join('uri-js', 'yarn.lock');
-    if (
-      name === '.env' ||
-      name.startsWith('.env.') ||
-      name === '.npmrc' ||
-      name === '.cache' ||
-      (!packagedLock && /\.(lock|pid|sock|db)$|\.sqlite|\.local\.jsonc?$/i.test(name)) ||
-      (!entry.isFile() && !entry.isDirectory() && !entry.isSymbolicLink())
-    ) {
-      throw new Error('Refusing private/control paths inside a selected dependency/cache directory.');
-    }
-    if (!entry.isSymbolicLink()) continue;
-    const link = path.join(entry.parentPath, entry.name);
-    if (path.isAbsolute(await fs.readlink(link))) {
-      throw new Error('Refusing path-bound absolute dependency/cache symlinks.');
-    }
-    const target = await fs.realpath(link);
-    const escaped = path.relative(base, target);
-    if (escaped === '..' || escaped.startsWith(`..${path.sep}`) || path.isAbsolute(escaped)) {
-      throw new Error('Refusing dependency/cache symlinks outside their copied directory.');
+  const pending = [base];
+  while (pending.length) {
+    const parent = pending.pop();
+    const entries = await fs.readdir(parent, { withFileTypes: true });
+    for (const entry of entries) {
+      // Worktrunk v0.81 copies ignored directories as units. Do not rely on
+      // descendant exclusion patterns to sanitize a selected directory.
+      const name = entry.name;
+      const file = path.join(parent, name);
+      // uri-js ships this declarative package manifest; it is not an in-use lock.
+      const packagedLock =
+        relative === 'node_modules' && entry.isFile() && path.relative(base, file) === path.join('uri-js', 'yarn.lock');
+      if (
+        name === '.env' ||
+        name.startsWith('.env.') ||
+        name === '.npmrc' ||
+        name === '.cache' ||
+        (!packagedLock && /\.(lock|pid|sock|db)$|\.sqlite|\.local\.jsonc?$/i.test(name)) ||
+        (!entry.isFile() && !entry.isDirectory() && !entry.isSymbolicLink())
+      ) {
+        throw new Error('Refusing private/control paths inside a selected dependency/cache directory.');
+      }
+      if (entry.isDirectory()) {
+        pending.push(file);
+        continue;
+      }
+      if (!entry.isSymbolicLink()) continue;
+      if (path.isAbsolute(await fs.readlink(file))) {
+        throw new Error('Refusing path-bound absolute dependency/cache symlinks.');
+      }
+      const target = await fs.realpath(file);
+      const escaped = path.relative(base, target);
+      if (escaped === '..' || escaped.startsWith(`..${path.sep}`) || path.isAbsolute(escaped)) {
+        throw new Error('Refusing dependency/cache symlinks outside their copied directory.');
+      }
     }
   }
 }
